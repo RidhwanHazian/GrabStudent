@@ -1,13 +1,11 @@
 // Show success message
-function showMessage(msgId, text) {
-    const msg = document.getElementById(msgId);
-    msg.innerText = text;
+document.addEventListener("DOMContentLoaded", () => {
+  const msg = document.querySelector(".success-msg");
+  if(msg && msg.textContent.trim() !== "") {
     msg.style.display = "block";
-
-    setTimeout(() => {
-        msg.style.display = "none";
-    }, 5000);
-}
+    setTimeout(() => { msg.style.display = "none"; }, 3000);
+  }
+});
 
 // Booking form
 const bookingForm = document.querySelector('form[onsubmit="submitBooking(event)"]');

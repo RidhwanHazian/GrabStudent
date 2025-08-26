@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About | Grab Student</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -13,13 +13,16 @@
     <div class="logo">GRAB STUDENT</div>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html" class="active">About</a></li>
-        <li><a href="location.html">Location</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="{{ url_for('index') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}" class="active">About</a></li>
+        <li><a href="{{ url_for('location') }}">Location</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
       </ul>
     </nav>
-    <a href="login.html" class="login-btn">Login</a>
+    <div class="nav-buttons">
+      <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+      <a href="{{ url_for('signup') }}" class="signup-btn">Sign Up</a>
+    </div>
   </header>
 
   <!-- About Section -->

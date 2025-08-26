@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('location') }}">Location</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-buttons">
+      <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+      <a href="{{ url_for('signup') }}" class="signup-btn">Sign Up</a>
+    </div>
+
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>GRAB FOR EVERYONE</h1>
+      <p>Get your booked grab now<br>with lower price.</p>
+      <a href="{{ url_for('booking') }}" class="btn">BOOK NOW!</a>
+    </div>
+    <img src="{{ url_for('static', filename='assets/car.png') }}" alt="Grab Car">
+  </section>
+
+  <div class="bottom-space"></div>
+
+</body>
+</html>

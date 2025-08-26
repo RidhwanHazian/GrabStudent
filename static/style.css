@@ -48,7 +48,9 @@ nav ul li a:hover {
   color: #fff;
 }
 
-.login-btn {
+/* Login & Signup Buttons */
+.login-btn,
+.signup-btn {
   background: #333;
   padding: 10px 22px;
   border-radius: 25px;
@@ -56,7 +58,14 @@ nav ul li a:hover {
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;
-  margin-top: 10px;
+  margin-left: 10px; /* space between buttons */
+}
+
+/* Make the buttons stay on the same line with navbar links */
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1px; /* space between login and signup */
 }
 
 /* Hero section */
@@ -223,6 +232,7 @@ nav ul li a:hover {
   font-size: 0.95rem;
   color: #555;
 }
+
 
 /* ========================= */
 /*   RESPONSIVE BREAKPOINTS  */
