@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #6C7A64;
+  color: #fff;
+}
+
+/* Navbar */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 22px;  /* bigger logo font */
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 35px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #dcdcdc;
+  font-weight: 600;
+  font-size: 18px;  /* bigger nav text */
+  transition: 0.3s;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+  color: #fff;
+}
+
+.login-btn {
+  background: #333;
+  padding: 10px 22px;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Hero section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px;
+  min-height: 80vh;
+}
+
+.hero-text {
+  max-width: 50%;
+}
+
+.hero-text h1 {
+  font-size: 52px;   /* larger heading */
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  font-size: 20px;   /* larger paragraph */
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.hero-text .btn {
+  background: #333;
+  padding: 14px 32px;
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.hero-text .btn:hover {
+  background: #222;
+}
+
+.hero img {
+  max-width: 550px;
+  height: auto;
+}
+
+/* White background below */
+.bottom-space {
+  background: white;
+  height: 120px;
+  border-top-left-radius: 100% 30px;
+  border-top-right-radius: 100% 30px;
+  margin-top: -40px;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .hero-text {
+    max-width: 100%;
+  }
+
+  .hero img {
+    margin-top: 25px;
+    max-width: 350px;
+  }
+}
