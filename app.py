@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import mysql.connector
-from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -13,9 +13,16 @@ db = mysql.connector.connect(
     database="GrabStudent"
 )
 
-# --------------------------
-# Home & Pages
-# --------------------------
+# Predefined valid locations for booking
+VALID_LOCATIONS = [
+    "UiTM Jasin → Melaka Sentral",
+    "UiTM Jasin → Aeon Bandaraya",
+    "UiTM Jasin → Muar",
+    "UiTM Jasin → MITC"
+]
+
+# ----------------- PUBLIC PAGES -----------------
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -33,14 +40,14 @@ def contact():
 def location():
     return render_template('location.html')
 
-# --------------------------
+# ----------------- AUTHENTICATION -----------------
+
 # Signup
-# --------------------------
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form['name'].strip()
-        email = request.form['email'].strip()
+        name = request.form['name']
+        email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
@@ -50,15 +57,15 @@ def signup():
 
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
-        if cursor.fetchone():
+        existing_user = cursor.fetchone()
+        if existing_user:
             cursor.close()
             flash("❌ Email already registered.")
             return redirect(url_for('signup'))
 
-        hashed_password = generate_password_hash(password)
         cursor.execute(
             "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-            (name, email, hashed_password)
+            (name, email, password)
         )
         db.commit()
         cursor.close()
@@ -67,24 +74,23 @@ def signup():
 
     return render_template('signup.html')
 
-# --------------------------
 # Login
-# --------------------------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email'].strip()
+        email = request.form['email']
         password = request.form['password']
 
         cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        cursor.execute("SELECT * FROM users WHERE email=%s AND password=%s", (email, password))
         user = cursor.fetchone()
         cursor.close()
 
-        if user and check_password_hash(user['password'], password):
+        if user:
             session['user_id'] = user['id']
-            session['user_name'] = user['name']
             session['user_email'] = user['email']
+            session['user_name'] = user['name']      # <-- add this
+            session['is_admin'] = user.get('is_admin', False)
             flash("✅ Login successful!")
             return redirect(url_for('booking'))
         else:
@@ -93,18 +99,15 @@ def login():
 
     return render_template('login.html')
 
-# --------------------------
 # Logout
-# --------------------------
 @app.route('/logout')
 def logout():
     session.clear()
     flash("✅ Logged out successfully.")
     return redirect(url_for('login'))
 
-# --------------------------
-# Booking
-# --------------------------
+# ----------------- BOOKING -----------------
+
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
     if 'user_id' not in session:
@@ -112,24 +115,67 @@ def booking():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        name = request.form['name'].strip()
-        pickup = request.form['pickup'].strip()
-        dropoff = request.form['dropoff'].strip()
-        datetime = request.form['datetime']
+        name = request.form['name']
+        pickup = request.form['pickup']
+        dropoff = request.form['dropoff']
+        datetime_input = request.form['datetime']
+
+        # Validate locations
+        if pickup not in VALID_LOCATIONS or dropoff not in VALID_LOCATIONS:
+            flash("❌ Invalid pickup or dropoff location.")
+            return redirect(url_for('booking'))
+
+        # Validate future datetime
+        booking_time = datetime.fromisoformat(datetime_input)
+        if booking_time <= datetime.now():
+            flash("❌ Booking date/time must be in the future.")
+            return redirect(url_for('booking'))
 
         cursor = db.cursor()
         cursor.execute(
             "INSERT INTO booking (name, pickup, dropoff, datetime, user_id) VALUES (%s, %s, %s, %s, %s)",
-            (name, pickup, dropoff, datetime, session['user_id'])
+            (name, pickup, dropoff, datetime_input, session['user_id'])
         )
         db.commit()
         cursor.close()
         flash("✅ Booking submitted successfully!")
 
-    return render_template('booking.html')
+    return render_template('booking.html', locations=VALID_LOCATIONS)
 
-# --------------------------
-# Run app
-# --------------------------
+# ----------------- USER PROFILE -----------------
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        flash("⚠️ You must be logged in to view your profile.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session['user_id'],))
+    user = cursor.fetchone()
+
+    cursor.execute("SELECT * FROM booking WHERE user_id=%s ORDER BY datetime DESC", (session['user_id'],))
+    bookings = cursor.fetchall()
+    cursor.close()
+
+    return render_template('profile.html', user=user, bookings=bookings)
+
+# ----------------- ADMIN DASHBOARD -----------------
+
+@app.route('/admin')
+def admin_dashboard():
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM booking ORDER BY datetime DESC")
+    all_bookings = cursor.fetchall()
+    cursor.close()
+
+    return render_template('admin.html', bookings=all_bookings)
+
+# ----------------- RUN SERVER -----------------
+
 if __name__ == '__main__':
     app.run(debug=True)

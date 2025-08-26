@@ -48,6 +48,12 @@ nav ul li a:hover {
   color: #fff;
 }
 
+.user-name {
+  color: #fff;
+  font-weight: 600;
+  margin-right: 15px;
+}
+
 /* Login & Signup Buttons */
 .login-btn,
 .signup-btn {
@@ -136,7 +142,9 @@ nav ul li a:hover {
   margin-bottom: 20px;
 }
 
+/* Inputs and Dropdowns */
 .form-section form input,
+.form-section form select,
 .form-section form button {
   width: 100%;
   max-width: 400px;
@@ -145,12 +153,22 @@ nav ul li a:hover {
   border: none;
   border-radius: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
-.form-section form input {
+.form-section form input,
+.form-section form select {
   background: #f9f9f9;
+  outline: none;
+  transition: 0.3s;
 }
 
+.form-section form input:focus,
+.form-section form select:focus {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Booking Button */
 .form-section form button {
   background: #333;
   color: #fff;
@@ -163,20 +181,34 @@ nav ul li a:hover {
   background: #222;
 }
 
+/* Optional: style for dropdown arrow to match input */
+.form-section form select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 30px; /* space for arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><polygon points='0,0 16,0 8,8' fill='%23333'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+
 /* Success message */
 .success-msg {
-    display: block;
-    background: #e0f7fa; /* light blue for info */
-    color: #00796b;       /* greenish */
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    margin: 15px auto;
-    text-align: center;
-    width: 100%;
-    max-width: 300px;
-    font-size: 14px;
+  display: block;
+  background: #e0f8e9;
+  color: #2e7d32;
+  border: 1px solid #2e7d32;
+  padding: 12px;
+  border-radius: 5px;
+  margin: 15px auto;
+  text-align: center;
+  max-width: 350px;
+  font-weight: 600;
+  font-size: 14px;
 }
+
 
 
 /* Info Sections (About, Contact) */
