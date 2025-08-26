@@ -10,6 +10,7 @@
 body {
   background-color: #6C7A64;
   color: #fff;
+  line-height: 1.6;
 }
 
 /* Navbar */
@@ -18,24 +19,27 @@ header {
   justify-content: space-between;
   align-items: center;
   padding: 20px 60px;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
 }
 
 .logo {
   font-weight: 700;
-  font-size: 22px;  /* bigger logo font */
+  font-size: 22px;
 }
 
 nav ul {
   display: flex;
   list-style: none;
   gap: 35px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 nav ul li a {
   text-decoration: none;
   color: #dcdcdc;
   font-weight: 600;
-  font-size: 18px;  /* bigger nav text */
+  font-size: 18px;
   transition: 0.3s;
 }
 
@@ -52,6 +56,7 @@ nav ul li a:hover {
   text-decoration: none;
   font-weight: 600;
   font-size: 16px;
+  margin-top: 10px;
 }
 
 /* Hero section */
@@ -61,20 +66,22 @@ nav ul li a:hover {
   justify-content: space-between;
   padding: 60px;
   min-height: 80vh;
+  flex-wrap: wrap;
 }
 
 .hero-text {
   max-width: 50%;
+  flex: 1;
 }
 
 .hero-text h1 {
-  font-size: 52px;   /* larger heading */
+  font-size: 52px;
   font-weight: 700;
   margin-bottom: 20px;
 }
 
 .hero-text p {
-  font-size: 20px;   /* larger paragraph */
+  font-size: 20px;
   line-height: 1.6;
   margin-bottom: 30px;
 }
@@ -97,6 +104,7 @@ nav ul li a:hover {
 .hero img {
   max-width: 550px;
   height: auto;
+  flex: 1;
 }
 
 /* White background below */
@@ -108,10 +116,130 @@ nav ul li a:hover {
   margin-top: -40px;
 }
 
+/* Form Section */
+.form-section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.form-section h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.form-section form input,
+.form-section form button {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.form-section form input {
+  background: #f9f9f9;
+}
+
+.form-section form button {
+  background: #333;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.form-section form button:hover {
+  background: #222;
+}
+
+/* Success message */
+.success-msg {
+  display: none;
+  background: #fff;
+  color: #2e7d32;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 15px auto 0 auto;
+  text-align: center;
+  width: 100%;
+  max-width: 300px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+/* Info Sections (About, Contact) */
+.info-section {
+  padding: 60px 20px;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.info-section h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+/* Location Section */
+.locations {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.locations h1 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.location-card {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.location-card:hover {
+  transform: translateY(-5px);
+}
+
+.location-card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.location-card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* ========================= */
+/*   RESPONSIVE BREAKPOINTS  */
+/* ========================= */
+
+/* Tablets */
 @media (max-width: 900px) {
+  header {
+    padding: 20px 30px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
   .hero {
     flex-direction: column;
     text-align: center;
+    padding: 40px 20px;
   }
 
   .hero-text {
@@ -121,5 +249,12 @@ nav ul li a:hover {
   .hero img {
     margin-top: 25px;
     max-width: 350px;
+  }
+}
+
+/* Phones */
+@media screen and (max-width: 600px) {
+  .hamburger {
+    display: flex;
   }
 }
