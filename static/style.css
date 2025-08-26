@@ -165,19 +165,19 @@ nav ul li a:hover {
 
 /* Success message */
 .success-msg {
-  display: none;
-  background: #fff;
-  color: #2e7d32;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 15px auto 0 auto;
-  text-align: center;
-  width: 100%;
-  max-width: 300px;
-  box-sizing: border-box;
-  font-size: 14px;
+    display: block;
+    background: #e0f7fa; /* light blue for info */
+    color: #00796b;       /* greenish */
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 15px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    font-size: 14px;
 }
+
 
 /* Info Sections (About, Contact) */
 .info-section {

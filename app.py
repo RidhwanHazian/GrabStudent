@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import mysql.connector
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -12,9 +13,9 @@ db = mysql.connector.connect(
     database="GrabStudent"
 )
 
-# -----------------------------
-# Pages
-# -----------------------------
+# --------------------------
+# Home & Pages
+# --------------------------
 @app.route('/')
 @app.route('/index')
 def index():
@@ -32,45 +33,14 @@ def contact():
 def location():
     return render_template('location.html')
 
-# -----------------------------
-# Login
-# -----------------------------
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-
-        cursor = db.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE email=%s AND password=%s", (email, password))
-        user = cursor.fetchone()
-        cursor.close()
-
-        if user:
-            session['user_id'] = user['id']
-            session['user_email'] = user['email']
-            flash("✅ Login successful!")
-            return redirect(url_for('booking'))
-        else:
-            flash("❌ Invalid email or password.")
-            return redirect(url_for('login'))
-
-    return render_template('login.html')
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    flash("✅ Logged out successfully.")
-    return redirect(url_for('login'))
-
-# -----------------------------
+# --------------------------
 # Signup
-# -----------------------------
+# --------------------------
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
+        name = request.form['name'].strip()
+        email = request.form['email'].strip()
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
@@ -80,14 +50,16 @@ def signup():
 
         cursor = db.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
-        existing_user = cursor.fetchone()
-        if existing_user:
+        if cursor.fetchone():
             cursor.close()
             flash("❌ Email already registered.")
             return redirect(url_for('signup'))
 
-        cursor.execute("INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-                       (name, email, password))
+        hashed_password = generate_password_hash(password)
+        cursor.execute(
+            "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+            (name, email, hashed_password)
+        )
         db.commit()
         cursor.close()
         flash("✅ Account created successfully! Please log in.")
@@ -95,9 +67,44 @@ def signup():
 
     return render_template('signup.html')
 
-# -----------------------------
+# --------------------------
+# Login
+# --------------------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email'].strip()
+        password = request.form['password']
+
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE email=%s", (email,))
+        user = cursor.fetchone()
+        cursor.close()
+
+        if user and check_password_hash(user['password'], password):
+            session['user_id'] = user['id']
+            session['user_name'] = user['name']
+            session['user_email'] = user['email']
+            flash("✅ Login successful!")
+            return redirect(url_for('booking'))
+        else:
+            flash("❌ Invalid email or password.")
+            return redirect(url_for('login'))
+
+    return render_template('login.html')
+
+# --------------------------
+# Logout
+# --------------------------
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("✅ Logged out successfully.")
+    return redirect(url_for('login'))
+
+# --------------------------
 # Booking
-# -----------------------------
+# --------------------------
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
     if 'user_id' not in session:
@@ -105,9 +112,9 @@ def booking():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        name = request.form['name']
-        pickup = request.form['pickup']
-        dropoff = request.form['dropoff']
+        name = request.form['name'].strip()
+        pickup = request.form['pickup'].strip()
+        dropoff = request.form['dropoff'].strip()
         datetime = request.form['datetime']
 
         cursor = db.cursor()
@@ -118,13 +125,11 @@ def booking():
         db.commit()
         cursor.close()
         flash("✅ Booking submitted successfully!")
-        return redirect(url_for('booking'))  # <-- redirect here
 
     return render_template('booking.html')
 
-
-# -----------------------------
-# Run App
-# -----------------------------
+# --------------------------
+# Run app
+# --------------------------
 if __name__ == '__main__':
     app.run(debug=True)
