@@ -142,6 +142,13 @@ nav ul li a:hover {
   margin-bottom: 20px;
 }
 
+.form-section form .form-fields {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* this centers all children horizontally */
+  gap: 15px;           /* spacing between inputs */
+}
+
 /* Inputs and Dropdowns */
 .form-section form input,
 .form-section form select,
@@ -167,6 +174,31 @@ nav ul li a:hover {
 .form-section form select:focus {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
+select#pickup {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  margin: 10px auto;
+  display: block; /* block-level for centering */
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.other-input {
+  display: none; /* hidden by default */
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background: #f9f9f9;
+  box-sizing: border-box;
+  display: block;  /* ensures block-level element for centering */
+}
+
 
 /* Booking Button */
 .form-section form button {
