@@ -484,6 +484,111 @@ canvas#statusChart {
   max-width: 100%;
 }
 
+.delete-btn {
+    background-color: #bf616a; /* red */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background-color: #9b454f; /* darker red */
+}
+
+.btn {
+    background-color: #88C0D0;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #679bb0;
+}
+
+
+.logout-btn {
+    background-color: #d08770; /* orange */
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.logout-btn:hover {
+    background-color: #b7634f; /* darker orange on hover */
+}
+
+/* ----------------- Filter Form ----------------- */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: flex-end; /* align inputs and button to bottom */
+}
+
+.filter-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2E3440;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.filter-form input[type="text"] {
+    flex: 1;          /* allows it to grow */
+    min-width: 150px; /* minimum width */
+    max-width: 300px; /* prevents it from being too wide */
+}
+
+.filter-form button {
+    background-color: #88C0D0;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.filter-form button:hover {
+    background-color: #5e8aa0;
+}
+
+
+
+/* Responsive: stack filters on small screens */
+@media (max-width: 768px) {
+    .filter-form {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .filter-form button {
+        width: 100%;
+    }
+}
+
 /* ========================= */
 /*   RESPONSIVE BREAKPOINTS  */
 /* ========================= */

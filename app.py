@@ -53,6 +53,7 @@ def contact():
 def location():
     return render_template('location.html')
 
+
 # ----------------- AUTHENTICATION -----------------
 
 # Signup
@@ -150,7 +151,7 @@ def login():
 
 
 # Logout
-@app.route('/logout')
+@app.route('/logout', methods=['GET','POST'])
 def logout():
     session.clear()
     flash("✅ Logged out successfully.")
@@ -372,8 +373,226 @@ def admin_dashboard():
         recent_bookings=recent_bookings
     )
 
+# ----------------- ADMIN: Manage Bookings -----------------
+@app.route('/admin/bookings')
+def admin_bookings():
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    status = request.args.get('status')
+    driver_id = request.args.get('driver_id')
+    date_from = request.args.get('date_from')
+    date_to = request.args.get('date_to')
+
+    query = """
+        SELECT b.id, b.name, b.pickup, b.dropoff, b.datetime, b.status, u.name AS customer_name, u.email, b.driver_id
+        FROM booking b
+        LEFT JOIN users u ON b.user_id = u.id
+        WHERE 1=1
+    """
+    params = []
+
+    if status:
+        query += " AND b.status=%s"
+        params.append(status)
+    if driver_id:
+        query += " AND b.driver_id=%s"
+        params.append(driver_id)
+    if date_from:
+        query += " AND DATE(b.datetime) >= %s"
+        params.append(date_from)
+    if date_to:
+        query += " AND DATE(b.datetime) <= %s"
+        params.append(date_to)
+
+    query += " ORDER BY b.datetime DESC"
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute(query, tuple(params))
+    bookings = cursor.fetchall()
+
+    # Fetch all drivers for the filter dropdown
+    cursor.execute("SELECT driver_id, name FROM drivers")
+    drivers = cursor.fetchall()
+
+    cursor.close()
+    return render_template('admin_bookings.html', bookings=bookings, drivers=drivers)
+
+
+# Edit booking
+@app.route('/admin/bookings/edit/<int:booking_id>', methods=['GET', 'POST'])
+def edit_booking(booking_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM booking WHERE id=%s", (booking_id,))
+    booking = cursor.fetchone()
+
+    if request.method == 'POST':
+        pickup = request.form['pickup']
+        dropoff = request.form['dropoff']
+        datetime_input = request.form['datetime']
+        status = request.form['status']
+
+        cursor.execute("""
+            UPDATE booking SET pickup=%s, dropoff=%s, datetime=%s, status=%s
+            WHERE id=%s
+        """, (pickup, dropoff, datetime_input, status, booking_id))
+        db.commit()
+        cursor.close()
+        flash("✅ Booking updated successfully!")
+        return redirect(url_for('admin_bookings'))
+
+    cursor.close()
+    return render_template('edit_booking.html', booking=booking)
+
+
+# Delete booking
+@app.route('/admin/bookings/delete/<int:booking_id>', methods=['POST'])
+def delete_booking(booking_id):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM booking WHERE id=%s", (booking_id,))
+    db.commit()
+    cursor.close()
+    flash("✅ Booking deleted successfully!")
+    return redirect(url_for('admin_bookings'))
+
+# ----------------- ADMIN: Manage Users -----------------
+# Admin: View users & drivers
+@app.route('/admin/users')
+def admin_users():
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    search_query = request.args.get('search', '').strip()  # get search input
+
+    cursor = db.cursor(dictionary=True)
+
+    # Fetch customers (excluding admins)
+    if search_query:
+        cursor.execute(
+            "SELECT id, name, email, user_type FROM users WHERE user_type != 'admin' AND (name LIKE %s OR email LIKE %s)",
+            (f"%{search_query}%", f"%{search_query}%")
+        )
+    else:
+        cursor.execute(
+            "SELECT id, name, email, user_type FROM users WHERE user_type != 'admin'"
+        )
+    users = cursor.fetchall()
+
+    # Fetch drivers
+    if search_query:
+        cursor.execute(
+            "SELECT driver_id, name, email FROM drivers WHERE name LIKE %s OR email LIKE %s",
+            (f"%{search_query}%", f"%{search_query}%")
+        )
+    else:
+        cursor.execute(
+            "SELECT driver_id, name, email FROM drivers"
+        )
+    drivers = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template('admin_users.html', users=users, drivers=drivers)
+
+
+
+# Admin: Edit user/driver
+@app.route('/admin/users/edit/<int:user_id>/<user_type>', methods=['GET','POST'])
+def edit_user(user_id, user_type):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+
+    # Fetch existing record
+    if user_type == 'driver':
+        cursor.execute("SELECT * FROM drivers WHERE driver_id=%s", (user_id,))
+    else:
+        cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+    record = cursor.fetchone()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+
+        if user_type == 'driver':
+            cursor.execute("UPDATE drivers SET name=%s, email=%s WHERE driver_id=%s", (name, email, user_id))
+        else:
+            cursor.execute("UPDATE users SET name=%s, email=%s WHERE id=%s", (name, email, user_id))
+
+        db.commit()
+        cursor.close()
+        flash("✅ Record updated successfully!")
+        return redirect(url_for('admin_users'))
+
+    cursor.close()
+    return render_template('edit_user.html', record=record, user_type=user_type)
+
+
+# Admin: Delete user/driver
+@app.route('/admin/users/delete/<int:user_id>/<user_type>', methods=['POST'])
+def delete_user(user_id, user_type):
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    if user_type == 'driver':
+        cursor.execute("DELETE FROM drivers WHERE driver_id=%s", (user_id,))
+    else:
+        cursor.execute("DELETE FROM users WHERE id=%s", (user_id,))
+    db.commit()
+    cursor.close()
+    flash("✅ User/Driver deleted successfully!")
+    return redirect(url_for('admin_users'))
+
+# Admin: Edit My Profile
+@app.route('/admin/edit_profile', methods=['GET', 'POST'])
+def edit_profile():
+    if 'user_id' not in session or not session.get('is_admin'):
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id=%s", (session['user_id'],))
+    admin = cursor.fetchone()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+
+        # Update fields
+        if password:
+            cursor.execute("UPDATE users SET name=%s, email=%s, password=%s WHERE id=%s",
+                           (name, email, password, session['user_id']))
+        else:
+            cursor.execute("UPDATE users SET name=%s, email=%s WHERE id=%s",
+                           (name, email, session['user_id']))
+
+        db.commit()
+        cursor.close()
+        flash("✅ Profile updated successfully!")
+        return redirect(url_for('admin_dashboard'))
+
+    cursor.close()
+    return render_template('edit_profile.html', admin=admin)
+
 
 # ----------------- RUN SERVER -----------------
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
