@@ -11,24 +11,14 @@
 
   <!-- Navbar -->
   <header>
-    <div class="logo">GRAB STUDENT</div>
+    <div class="logo">GRAB STUDENT - Customer</div>
     <nav>
       <ul>
-        <li><a href="{{ url_for('index') }}">Home</a></li>
-        <li><a href="{{ url_for('about') }}">About</a></li>
-        <li><a href="{{ url_for('location') }}">Location</a></li>
-        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('booking') }}" class="active">Make Booking</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
       </ul>
     </nav>
-    <div class="nav-buttons">
-      {% if session.get('user_id') %}
-        <span class="user-name">Hello, {{ session.get('user_name') }}!</span>
-        <a href="{{ url_for('logout') }}" class="login-btn">Logout</a>
-      {% else %}
-        <a href="{{ url_for('login') }}" class="login-btn">Login</a>
-        <a href="{{ url_for('signup') }}" class="signup-btn">Sign Up</a>
-      {% endif %}
-    </div>
   </header>
 
   <!-- Booking Form -->

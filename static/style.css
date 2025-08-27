@@ -639,6 +639,186 @@ canvas#statusChart {
   background-color: #a54250;
 }
 
+/* Booking Detail Card */
+.detail-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.detail-card h2 {
+    margin-bottom: 15px;
+}
+.detail-card p {
+    margin: 8px 0;
+}
+.btn-back {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 8px 14px;
+    background-color: #88C0D0;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* Booking Status */
+.card-status {
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: white;
+}
+.card-status.pending { background-color: #f0ad4e; }
+.card-status.completed { background-color: #5cb85c; }
+.card-status.cancelled { background-color: #d9534f; }
+.card-status.accepted { background-color: #0275d8; }
+.card-status.on-the-way { background-color: #5bc0de; }
+
+/* Feedback Card */
+.feedback-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.feedback-card h2 {
+    margin-bottom: 20px;
+}
+.feedback-card label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: 600;
+}
+.feedback-card input, 
+.feedback-card textarea, 
+.feedback-card select {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+}
+.btn-submit {
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    color: white;
+    background-color: #88C0D0;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Feedback Section */
+#feedback-section {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#feedback-section h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+#feedback-section h3 {
+    font-size: 22px;
+    color: #555;
+    margin-top: 40px;
+    margin-bottom: 15px;
+}
+
+/* Feedback Form */
+#feedback-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+#feedback-form label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+#feedback-form select,
+#feedback-form textarea {
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    width: 100%;
+    resize: vertical;
+}
+
+#feedback-form select:focus,
+#feedback-form textarea:focus {
+    outline: none;
+    border-color: #5f41e4;
+    box-shadow: 0 0 5px rgba(95, 65, 228, 0.4);
+}
+
+#feedback-form button#feedback_submit_btn {
+    padding: 12px 20px;
+    background-color: #5f41e4;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+#feedback-form button#feedback_submit_btn:hover {
+    background-color: #4b34c4;
+}
+
+/* Feedback Table */
+#feedback_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+#feedback_table thead {
+    background-color: #5f41e4;
+    color: #fff;
+}
+
+#feedback_table th,
+#feedback_table td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+#feedback_table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#feedback_table tbody tr:hover {
+    background-color: #ececff;
+}
+
+
+
 /* Responsive: stack filters on small screens */
 @media (max-width: 768px) {
     .filter-form {

@@ -13,7 +13,7 @@
     <nav>
       <ul>
         <li><a href="{{ url_for('customer_dashboard') }}" class="active">Dashboard</a></li>
-        <li><a href="{{ url_for('booking') }}">New Booking</a></li>
+        <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
         <li><a href="{{ url_for('logout') }}">Logout</a></li>
       </ul>
     </nav>
@@ -39,7 +39,7 @@
           <th>Dropoff</th>
           <th>Date & Time</th>
           <th>Status</th>
-          <th>Action</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -49,19 +49,43 @@
           <td>{{ booking.dropoff }}</td>
           <td>{{ booking.datetime }}</td>
           <td class="status {{ booking.status|lower|replace(' ', '-') }}">{{ booking.status }}</td>
-          <td>
-            {% if booking.status not in ['Completed', 'Cancelled'] %}
-            <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="POST">
-              <button type="submit" class="btn cancel">Cancel</button>
-            </form>
-            {% else %}
-            -
-            {% endif %}
+          <td class="actions">
+            <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn detail">Details</a>
+            <a href="{{ url_for('feedback_booking', booking_id=booking.id) }}" class="btn">Give Feedback</a>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </section>
+  <!-- Previous Feedback Section -->
+    <section class="form-section">
+        <h2>Your Feedback</h2>
+        {% if feedbacks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Rating</th>
+                    <th>Comment</th>
+                    <th>Submitted At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fb in feedbacks %}
+                <tr>
+                    <td>{{ fb.pickup }} → {{ fb.dropoff }} | {{ fb.datetime }}</td>
+                    <td>{{ fb.rating }} ⭐</td>
+                    <td>{{ fb.comment }}</td>
+                    <td>{{ fb.created_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No feedback submitted yet.</p>
+        {% endif %}
+    </section>
+
 </body>
 </html>

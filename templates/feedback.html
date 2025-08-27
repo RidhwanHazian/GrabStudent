@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback | Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT - Customer</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <section class="form-section" id="feedback-section">
+    <h2>Submit Your Feedback</h2>
+
+    <form action="{{ url_for('feedback_booking', booking_id=selected_booking.id if selected_booking else 0) }}" method="POST" id="feedback-form">
+      <label for="feedback_booking_select">Select Booking:</label>
+      <select name="feedback_booking_id" id="feedback_booking_select" required>
+        <option value="">-- Choose Booking --</option>
+        {% for bkg in bookings %}
+          {% if bkg.status == 'Completed' %}
+          <option value="{{ bkg.id }}">
+            {{ bkg.pickup }} → {{ bkg.dropoff }} | {{ bkg.datetime }}
+          </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+
+      <label for="feedback_rating_select">Rating:</label>
+      <select name="feedback_rating" id="feedback_rating_select" required>
+        <option value="">-- Select Rating --</option>
+        <option value="1">1 ⭐</option>
+        <option value="2">2 ⭐</option>
+        <option value="3">3 ⭐</option>
+        <option value="4">4 ⭐</option>
+        <option value="5">5 ⭐</option>
+      </select>
+
+      <label for="feedback_comment_area">Comment:</label>
+      <textarea name="feedback_comment" id="feedback_comment_area" rows="4" placeholder="Write your feedback here..."></textarea>
+
+      <button type="submit" class="btn submit" id="feedback_submit_btn">Submit Feedback</button>
+    </form>
+  </section>
+</body>
+</html>

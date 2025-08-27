@@ -607,18 +607,21 @@ def edit_profile():
     return render_template('edit_profile.html', admin=admin)
 
 # ----------------- CUSTOMER DASHBOARD -----------------
+@app.route('/customer')
 @app.route('/customer/dashboard')
 def customer_dashboard():
     if 'user_id' not in session or session.get('user_type') != 'customer':
         flash("⚠️ Customer access required.")
         return redirect(url_for('login'))
 
-    status_filter = request.args.get('status')  # get ?status=
+    status_filter = request.args.get('status')  # get filter from query param
 
     cursor = db.cursor(dictionary=True)
+
+    # Fetch bookings with optional status filter
     if status_filter:
         cursor.execute(
-            "SELECT * FROM booking WHERE user_id=%s AND status=%s ORDER BY datetime DESC",
+            "SELECT * FROM booking WHERE user_id=%s AND status=%s ORDER BY datetime ASC",
             (session['user_id'], status_filter)
         )
     else:
@@ -627,9 +630,19 @@ def customer_dashboard():
             (session['user_id'],)
         )
     bookings = cursor.fetchall()
-    cursor.close()
 
-    return render_template('customer_dashboard.html', bookings=bookings, status_filter=status_filter)
+    # Fetch previous feedback
+    cursor.execute("""
+        SELECT f.*, b.pickup, b.dropoff, b.datetime
+        FROM feedback f
+        JOIN booking b ON f.booking_id = b.id
+        WHERE f.user_id=%s
+        ORDER BY f.created_at DESC
+    """, (session['user_id'],))
+    feedbacks = cursor.fetchall()
+
+    cursor.close()
+    return render_template('customer_dashboard.html', bookings=bookings, feedbacks=feedbacks, status_filter=status_filter)
 
 
 # Cancel booking
@@ -649,6 +662,99 @@ def cancel_booking(booking_id):
 
     flash("✅ Booking cancelled successfully.")
     return redirect(url_for('customer_dashboard'))
+
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback_index():
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    # Get all completed bookings for this user
+    cursor.execute("SELECT * FROM booking WHERE user_id=%s AND status='Completed'", (session['user_id'],))
+    bookings = cursor.fetchall()
+
+    # Get all previous feedbacks
+    cursor.execute("""
+        SELECT f.*, b.pickup, b.dropoff, b.datetime
+        FROM feedback f
+        JOIN booking b ON f.booking_id = b.id
+        WHERE f.user_id=%s
+        ORDER BY f.created_at DESC
+    """, (session['user_id'],))
+    feedbacks = cursor.fetchall()
+    cursor.close()
+
+    if request.method == 'POST':
+        booking_id = request.form['booking_id']
+        rating = request.form['rating']
+        comment = request.form['comment']
+
+        cursor = db.cursor()
+        cursor.execute(
+            "INSERT INTO feedback (user_id, booking_id, rating, comment, created_at) VALUES (%s,%s,%s,%s,NOW())",
+            (session['user_id'], booking_id, rating, comment)
+        )
+        db.commit()
+        cursor.close()
+        flash("✅ Feedback submitted successfully!")
+        return redirect(url_for('feedback'))
+
+    return render_template('feedback.html', bookings=bookings, feedbacks=feedbacks)
+
+# Provide feedback
+@app.route('/customer/feedback/<int:booking_id>', methods=['GET', 'POST'])
+def feedback_booking(booking_id):
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM booking WHERE id=%s AND user_id=%s", (booking_id, session['user_id']))
+    booking = cursor.fetchone()
+
+    if not booking:
+        cursor.close()
+        flash("❌ Booking not found.")
+        return redirect(url_for('customer_dashboard'))
+
+    if request.method == 'POST':
+        rating = request.form['rating']
+        comment = request.form['comment']
+
+        cursor.execute(
+            "INSERT INTO feedback (booking_id, user_id, rating, comment) VALUES (%s, %s, %s, %s)",
+            (booking_id, session['user_id'], rating, comment)
+        )
+        db.commit()
+        cursor.close()
+
+        flash("✅ Feedback submitted. Thank you!")
+        return redirect(url_for('customer_dashboard'))
+
+    cursor.close()
+    return render_template('feedback.html', booking=booking)
+
+
+# Booking detail
+@app.route('/customer/booking/<int:booking_id>')
+def booking_detail(booking_id):
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM booking WHERE id=%s AND user_id=%s", (booking_id, session['user_id']))
+    booking = cursor.fetchone()
+    cursor.close()
+
+    if not booking:
+        flash("❌ Booking not found.")
+        return redirect(url_for('customer_dashboard'))
+
+    return render_template('booking_detail.html', booking=booking)
+
 
 
 # ----------------- RUN SERVER -----------------

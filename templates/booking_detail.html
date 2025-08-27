@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Details | Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT - Customer</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <section class="form-section">
+    <h2>Booking Details</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pickup</th>
+          <th>Dropoff</th>
+          <th>Date & Time</th>
+          <th>Status</th>
+          <th>Driver</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ booking.pickup }}</td>
+          <td>{{ booking.dropoff }}</td>
+          <td>{{ booking.datetime }}</td>
+          <td class="status {{ booking.status|lower|replace(' ', '-') }}">{{ booking.status }}</td>
+          <td>{{ booking.driver_name if booking.driver_name else '-' }}</td>
+          <td>
+            {% if booking.status not in ['Completed', 'Cancelled'] %}
+            <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="POST">
+              <button type="submit" class="btn cancel">Cancel</button>
+            </form>
+            {% else %}
+            -
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>
