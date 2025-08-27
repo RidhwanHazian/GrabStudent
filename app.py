@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import mysql.connector
 from datetime import datetime
+from threading import Thread
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
@@ -24,6 +25,10 @@ app.config['MAIL_PASSWORD'] = 'edbucokhnzajivxy'  # App Password if Gmail
 app.config['MAIL_DEFAULT_SENDER'] = ('Grab Student', 'iwghostpride@gmail.com')
 
 mail = Mail(app)
+
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
 
 
 # Predefined valid locations for booking
@@ -258,15 +263,24 @@ def driver_bookings():
         flash("⚠️ Driver access required.")
         return redirect(url_for('login'))
 
+    status_filter = request.args.get('status')  # get ?status=
+
     cursor = db.cursor(dictionary=True)
-    cursor.execute(
-        "SELECT * FROM booking WHERE driver_id = %s ORDER BY datetime ASC",
-        (session['user_id'],)
-    )
+    if status_filter:
+        cursor.execute(
+            "SELECT * FROM booking WHERE driver_id=%s AND status=%s ORDER BY datetime ASC",
+            (session['user_id'], status_filter)
+        )
+    else:
+        cursor.execute(
+            "SELECT * FROM booking WHERE driver_id=%s ORDER BY datetime ASC",
+            (session['user_id'],)
+        )
     bookings = cursor.fetchall()
     cursor.close()
 
-    return render_template('driver_bookings.html', selected=bookings)
+    return render_template('driver_bookings.html', selected=bookings, status_filter=status_filter)
+
 
 
 # ----------------- UPDATE BOOKING STATUS -----------------
@@ -317,7 +331,7 @@ def update_booking_status(booking_id):
             <p>Thank you for using Grab Student.</p>
             """
 
-            mail.send(msg)
+            Thread(target=send_async_email, args=(app, msg)).start()
         except Exception as e:
             print("Error sending email:", e)
 

@@ -575,6 +575,27 @@ canvas#statusChart {
     background-color: #5e8aa0;
 }
 
+.status-tabs {
+  margin-bottom: 15px;
+}
+.status-tabs a {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #ccc;
+  margin-right: 5px;
+  color: #2E3440;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.status-tabs a.active {
+  background-color: #88C0D0;
+  color: white;
+}
+.status-tabs a:hover {
+  background-color: #5e8aa0;
+  color: white;
+}
 
 
 /* Responsive: stack filters on small screens */
