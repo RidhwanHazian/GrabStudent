@@ -133,8 +133,11 @@ def login():
             # Redirect based on role
             if user['user_type'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
+            elif user['user_type'] == 'driver':
+                return redirect(url_for('driver_dashboard'))
             else:  # customer
-                return redirect(url_for('booking'))
+                return redirect(url_for('customer_dashboard'))
+
 
         # If not found in users, check in drivers table
         cursor.execute("SELECT * FROM drivers WHERE email = %s AND password = %s", (email, password))
@@ -602,6 +605,50 @@ def edit_profile():
 
     cursor.close()
     return render_template('edit_profile.html', admin=admin)
+
+# ----------------- CUSTOMER DASHBOARD -----------------
+@app.route('/customer/dashboard')
+def customer_dashboard():
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    status_filter = request.args.get('status')  # get ?status=
+
+    cursor = db.cursor(dictionary=True)
+    if status_filter:
+        cursor.execute(
+            "SELECT * FROM booking WHERE user_id=%s AND status=%s ORDER BY datetime DESC",
+            (session['user_id'], status_filter)
+        )
+    else:
+        cursor.execute(
+            "SELECT * FROM booking WHERE user_id=%s ORDER BY datetime DESC",
+            (session['user_id'],)
+        )
+    bookings = cursor.fetchall()
+    cursor.close()
+
+    return render_template('customer_dashboard.html', bookings=bookings, status_filter=status_filter)
+
+
+# Cancel booking
+@app.route('/customer/cancel/<int:booking_id>', methods=['POST'])
+def cancel_booking(booking_id):
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute(
+        "UPDATE booking SET status='Cancelled' WHERE id=%s AND user_id=%s AND status NOT IN ('Completed', 'Cancelled')",
+        (booking_id, session['user_id'])
+    )
+    db.commit()
+    cursor.close()
+
+    flash("✅ Booking cancelled successfully.")
+    return redirect(url_for('customer_dashboard'))
 
 
 # ----------------- RUN SERVER -----------------
