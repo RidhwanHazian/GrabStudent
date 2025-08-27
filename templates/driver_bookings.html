@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Driver Dashboard | Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT - Driver</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('driver_dashboard') }}">All Bookings</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <section class="form-section">
+    <h2>My Selected Bookings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Pickup</th>
+          <th>Dropoff</th>
+          <th>Date & Time</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in selected %}
+        <tr>
+          <td>{{ booking.name }}</td>
+          <td>{{ booking.pickup }}</td>
+          <td>{{ booking.dropoff }}</td>
+          <td>{{ booking.datetime }}</td>
+          <td class="status {{ booking.status|lower|replace(' ', '-') }}">{{ booking.status }}</td>
+          <td>
+            <form action="{{ url_for('update_booking_status', booking_id=booking.id) }}" method="POST">
+                <select name="status">
+                <option value="Pending" {% if booking.status=='Pending' %}selected{% endif %}>Pending</option>
+                <option value="Accepted" {% if booking.status=='Accepted' %}selected{% endif %}>Accepted</option>
+                <option value="On the way" {% if booking.status=='On the way' %}selected{% endif %}>On the way</option>
+                <option value="Completed" {% if booking.status=='Completed' %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if booking.status=='Cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+              <button type="submit" class="btn">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</body>
+</html>

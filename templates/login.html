@@ -35,6 +35,23 @@
   <section class="form-section">
     <h2>Login to Your Account</h2>
     <form action="{{ url_for('login') }}" method="POST">
+
+      <!-- Role Selection -->
+      <div class="user-type">
+        <label>
+          <input type="radio" name="user_type" value="customer" required>
+          <span>Customer</span>
+        </label>
+        <label>
+          <input type="radio" name="user_type" value="driver">
+          <span>Driver</span>
+        </label>
+        <label>
+          <input type="radio" name="user_type" value="admin">
+          <span>Admin</span>
+        </label>
+      </div>
+
       <input type="email" name="email" placeholder="Email" required><br>
       <input type="password" name="password" placeholder="Password" required><br>
       <button type="submit">Login</button>

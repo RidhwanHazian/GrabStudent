@@ -46,29 +46,18 @@
       <div class="form-fields">
         <input type="text" name="name" placeholder="Your Name" required>
 
-        <select name="pickup" id="pickup" required>
-          <option value="" disabled selected>Select location</option>
-          <option value="UiTM Jasin → Jasin">UiTM Jasin → Jasin</option>
-          <option value="UiTM Jasin → Khraw/Hidayah Tomyam">UiTM Jasin → Khraw/Hidayah Tomyam</option>
-          <option value="UiTM Jasin → Melaka Sentral">UiTM Jasin → Melaka Sentral</option>
-          <option value="UiTM Jasin → Aeon Bandaraya">UiTM Jasin → Aeon Bandaraya</option>
-          <option value="UiTM Jasin → Muar Sentral">UiTM Jasin → Muar Sentral</option>
-          <option value="UiTM Jasin → Mahkota Parade">UiTM Jasin → Mahkota Parade</option>
-          <option value="UiTM Jasin → Vintage Night Market">UiTM Jasin → Vintage Night Market</option>
-          <option value="UiTM Jasin → Merlimau">UiTM Jasin → Merlimau</option>
-          <option value="UiTM Jasin → Pantai Klebang">UiTM Jasin → Pantai Klebang</option>
-          <option value="Other">Other</option>
-        </select>
+        <label for="pickup">Pickup Location</label>
+        <input type="text" id="pickup" name="pickup" placeholder="Enter pickup location" required>
 
+        <label for="dropoff">Dropoff Location</label>
+        <input type="text" id="dropoff" name="dropoff" placeholder="Enter dropoff location" required>
 
-        <input type="text" name="other_location" id="other_location" placeholder="Enter the location you want to pickup/dropoff" class="other-input">
-
-        <input type="datetime-local" name="datetime" required>
+        <label for="datetime">Date & Time</label>
+        <input type="datetime-local" id="datetime" name="datetime" required>
 
         <button type="submit">Book Now</button>
       </div>
     </form>
-
   </section>
 
 </body>

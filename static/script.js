@@ -5,35 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.style.display = "block";
     setTimeout(() => { msg.style.display = "none"; }, 5000);
   }
-
-  // Handle "Other" pickup input
-  const pickupSelect = document.getElementById("pickup");
-  const otherInput = document.getElementById("other_location");
-
-  if (pickupSelect && otherInput) {
-    otherInput.style.display = "none";
-    otherInput.required = false;
-
-    pickupSelect.addEventListener("change", () => {
-      if (pickupSelect.value === "Other") {
-        otherInput.style.display = "block";
-        otherInput.required = true;
-      } else {
-        otherInput.style.display = "none";
-        otherInput.required = false;
-      }
-    });
-  }
 });
-
-// Booking form demo message (optional for testing)
-const bookingForm = document.querySelector('form[onsubmit="submitBooking(event)"]');
-if (bookingForm) {
-  bookingForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    showMessage("message", "✅ Booking submitted successfully (demo only, not saved).");
-  });
-}
 
 // Login form demo message (optional for testing)
 const loginForm = document.getElementById('login-form');
