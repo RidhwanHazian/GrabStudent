@@ -402,6 +402,87 @@ tr:hover {
     font-weight: bold;
 }
 
+/* Overview Cards */
+.overview-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px 30px;
+}
+
+.overview-cards .card {
+  flex: 1 1 200px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.card.total { background-color: #88c0d0; color: #fff; }
+.card.completed { background-color: #a3be8c; color: #fff; }
+.card.pending { background-color: #ebcb8b; color: #fff; }
+.card.cancelled { background-color: #bf616a; color: #fff; }
+
+/* Recent Bookings Table */
+.recent-bookings {
+  padding: 20px 30px;
+  background-color: #ffffff;
+  margin: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.recent-bookings h2 {
+  margin-bottom: 15px;
+  color: black;
+  text-align: center  ;
+}
+
+.recent-bookings table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recent-bookings table th,
+.recent-bookings table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.recent-bookings table th {
+  background-color: #88C0D0; /* matches Total Bookings card */
+  color: #fff;               /* white text for contrast */
+  font-weight: 600;
+}
+
+
+.recent-bookings table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Analytics Chart */
+.analytics-chart {
+  background-color: #fff;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  width: 400px;      /* wider */
+  height: 400px;     /* square */
+}
+
+.analytics-chart canvas {
+  width: 100% !important;
+  height: 100% !important; /* fill the container */
+}
+
+
+canvas#statusChart {
+  max-width: 100%;
+}
 
 /* ========================= */
 /*   RESPONSIVE BREAKPOINTS  */
@@ -437,3 +518,14 @@ tr:hover {
     display: flex;
   }
 }
+
+@media (max-width: 600px) {
+  .analytics-chart {
+    width: 90%;
+    height: auto;
+  }
+  .analytics-chart canvas {
+    height: auto !important;
+  }
+}
+

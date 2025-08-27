@@ -63,7 +63,7 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        user_type = request.form['user_type']
+        user_type = request.form['user_type']  # either 'customer' or 'driver'
 
         if password != confirm_password:
             flash("Passwords do not match.")
@@ -88,11 +88,6 @@ def signup():
                 "INSERT INTO drivers (name, email, password) VALUES (%s, %s, %s)",
                 (name, email, password)
             )
-        elif user_type == "admin":
-            cursor.execute(
-                "INSERT INTO users (name, email, password, user_type) VALUES (%s, %s, %s, %s)",
-                (name, email, password, "admin")
-            )
         else:  # customer
             cursor.execute(
                 "INSERT INTO users (name, email, password, user_type) VALUES (%s, %s, %s, %s)",
@@ -106,7 +101,6 @@ def signup():
         return redirect(url_for('login'))
 
     return render_template('signup.html')
-
 
 
 # Login
@@ -340,11 +334,44 @@ def admin_dashboard():
         return redirect(url_for('login'))
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM booking ORDER BY datetime DESC")
-    all_bookings = cursor.fetchall()
+
+    # Total bookings
+    cursor.execute("SELECT COUNT(*) as total FROM booking")
+    total_bookings = cursor.fetchone()['total']
+
+    # Completed bookings
+    cursor.execute("SELECT COUNT(*) as completed FROM booking WHERE status='Completed'")
+    completed_bookings = cursor.fetchone()['completed']
+
+    # Pending bookings
+    cursor.execute("SELECT COUNT(*) as pending FROM booking WHERE status='Pending'")
+    pending_bookings = cursor.fetchone()['pending']
+
+    # Cancelled bookings
+    cursor.execute("SELECT COUNT(*) as cancelled FROM booking WHERE status='Cancelled'")
+    cancelled_bookings = cursor.fetchone()['cancelled']
+
+    # Recent bookings (last 5)
+    cursor.execute("""
+        SELECT b.id, b.name, b.pickup, b.dropoff, b.datetime, b.status, d.name as driver_name
+        FROM booking b
+        LEFT JOIN drivers d ON b.driver_id = d.driver_id
+        ORDER BY b.datetime DESC
+        LIMIT 5
+    """)
+    recent_bookings = cursor.fetchall()
+
     cursor.close()
 
-    return render_template('admin.html', bookings=all_bookings)
+    return render_template(
+        'admin.html',
+        total_bookings=total_bookings,
+        completed_bookings=completed_bookings,
+        pending_bookings=pending_bookings,
+        cancelled_bookings=cancelled_bookings,
+        recent_bookings=recent_bookings
+    )
+
 
 # ----------------- RUN SERVER -----------------
 

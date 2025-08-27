@@ -1,36 +1,55 @@
-// Show flash/success messages
 document.addEventListener("DOMContentLoaded", () => {
+
+  // ----------------- Flash / Success Messages -----------------
   const msg = document.querySelector(".success-msg");
-  if(msg && msg.textContent.trim() !== "") {
+  if (msg && msg.textContent.trim() !== "") {
     msg.style.display = "block";
     setTimeout(() => { msg.style.display = "none"; }, 5000);
   }
-});
 
-// Login form demo message (optional for testing)
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-  loginForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    showMessage("login-message", "✅ Login successful (demo only, not saved).");
-  });
-}
+  // ----------------- Admin Chart -----------------
+  const completedEl = document.getElementById('completed_count');
+  const pendingEl = document.getElementById('pending_count');
+  const cancelledEl = document.getElementById('cancelled_count');
 
-// Toggle mobile hamburger menu
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+  if (completedEl && pendingEl && cancelledEl) {
+    const completed = parseInt(completedEl.innerText);
+    const pending = parseInt(pendingEl.innerText);
+    const cancelled = parseInt(cancelledEl.innerText);
 
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    if (window.innerWidth <= 600) {
-      navLinks.classList.toggle('active');
-    }
-  });
-}
-
-// Optional: Close mobile menu if window resized above 600px
-window.addEventListener('resize', () => {
-  if (navLinks && window.innerWidth > 600) {
-    navLinks.classList.remove('active');
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Completed', 'Pending', 'Cancelled'],
+        datasets: [{
+          data: [completed, pending, cancelled],
+          backgroundColor: ['#a3be8c', '#ebcb8b', '#bf616a'],
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom' },
+          title: { display: true, text: 'Booking Status Overview' }
+        }
+      }
+    });
   }
+
+  // ----------------- Hamburger Menu Toggle -----------------
+  const hamburger = document.querySelector('.hamburger');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+      if (window.innerWidth <= 600) navLinks.classList.toggle('active');
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 600) navLinks.classList.remove('active');
+    });
+  }
+
 });
