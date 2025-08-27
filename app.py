@@ -129,7 +129,7 @@ def login():
             if user['user_type'] == 'admin':
                 return redirect(url_for('admin_dashboard'))
             else:  # customer
-                return redirect(url_for('profile'))
+                return redirect(url_for('booking'))
 
         # If not found in users, check in drivers table
         cursor.execute("SELECT * FROM drivers WHERE email = %s AND password = %s", (email, password))
