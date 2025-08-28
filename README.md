@@ -186,7 +186,7 @@ Contributions are welcome! Please fork the repository, create a new branch, and 
 
 MIT License
 
-Copyright (c) 2025 Muhammad Ridhwan Hazian
+Copyright (c) 2025 Muhammad Ridhwan bin Hazian
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
