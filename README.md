@@ -178,6 +178,13 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 ---
 
 ## Contributing
+
+- **Adam Mirza** - [GitHub](https://github.com/AdamMirza-crypto)  
+  Interface Designer – created the storyboard UI interface, some designs done in Canva (no coding).  
+
+- **Haris Naszim** - [GitHub](https://github.com/Dat1n)  
+  QA – responsible for testing the application, reporting bugs, and ensuring quality.
+  
 Contributions are welcome! Please fork the repository, create a new branch, and submit a pull request with your proposed changes.
 
 ---
