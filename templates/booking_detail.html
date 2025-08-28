@@ -12,8 +12,9 @@
     <div class="logo">GRAB STUDENT - Customer</div>
     <nav>
       <ul>
-        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('customer_dashboard') }}" class="active">Dashboard</a></li>
         <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
+        <li><a href="{{ url_for('payments') }}" >Payments</a></li>
         <li>
             <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
                 <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">

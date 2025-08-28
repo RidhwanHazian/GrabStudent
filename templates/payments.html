@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payments | Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT - Customer</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
+        <li><a href="{{ url_for('payments') }}" class="active">Payments</a></li>
+        <li>
+          <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+              <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                Logout
+              </button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <p class="success-msg">{{ messages[0] }}</p>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Payments Section -->
+  <section class="form-section">
+    <h2>My Payments</h2>
+
+    {% if bookings %}
+    <table>
+      <thead>
+        <tr>
+          <th>Pickup</th>
+          <th>Dropoff</th>
+          <th>Date & Time</th>
+          <th>Fare (RM)</th>
+          <th>Status</th>
+          <th>Payment Method</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.pickup }}</td>
+          <td>{{ booking.dropoff }}</td>
+          <td>{{ booking.datetime }}</td>
+          <td>{{ booking.total_amount }}</td>
+          <td class="{{ booking.payment_status|lower }}">{{ booking.payment_status }}</td>
+          <td>{{ booking.payment_method or '-' }}</td>
+          <td>
+            {% if booking.payment_status != 'Paid' %}
+            <form action="{{ url_for('pay_booking', booking_id=booking.id) }}" method="POST">
+              <input type="number" name="amount" placeholder="Enter amount" step="0.01" required>
+              <select name="payment_method" required>
+                <option value="Cash">Cash</option>
+                <option value="Card">Card</option>
+                <option value="Online">Online</option>
+              </select>
+              <button type="submit" class="btn pay">Pay</button>
+            </form>
+            {% else %}
+              <span class="paid">Paid ✅</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>No bookings found.</p>
+    {% endif %}
+  </section>
+</body>
+</html>

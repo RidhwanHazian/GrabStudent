@@ -852,7 +852,41 @@ def admin_delete_feedback(feedback_id):
     flash("🗑️ Feedback deleted successfully.")
     return redirect(url_for('admin_feedbacks'))
 
+# ----------------- CUSTOMER PAYMENTS -----------------
+@app.route('/customer/payments')
+def payments():
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
 
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM booking WHERE user_id=%s ORDER BY datetime DESC", (session['user_id'],))
+    bookings = cursor.fetchall()
+    cursor.close()
+
+    return render_template('payments.html', bookings=bookings)
+
+# ----------------- CUSTOMER: Pay Booking -----------------
+@app.route('/customer/pay_booking/<int:booking_id>', methods=['POST'])
+def pay_booking(booking_id):
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    amount = request.form.get('amount')
+    payment_method = request.form.get('payment_method')
+
+    cursor = db.cursor()
+    cursor.execute("""
+        UPDATE booking
+        SET total_amount=%s, payment_status='Paid', payment_method=%s
+        WHERE id=%s AND user_id=%s
+    """, (amount, payment_method, booking_id, session['user_id']))
+    db.commit()
+    cursor.close()
+
+    flash(f"✅ Payment of RM{amount} via {payment_method} recorded successfully!")
+    return redirect(url_for('payments'))
 
 
 # ----------------- RUN SERVER -----------------
