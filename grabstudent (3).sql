@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2025 at 01:15 PM
+-- Generation Time: Aug 28, 2025 at 11:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -36,22 +36,26 @@ CREATE TABLE `booking` (
   `datetime` datetime NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `driver_id` int(11) DEFAULT NULL,
-  `status` enum('Pending','Accepted','On the way','Completed','Cancelled') DEFAULT 'Pending'
+  `status` enum('Pending','Accepted','On the way','Completed','Cancelled') DEFAULT 'Pending',
+  `total_amount` decimal(10,2) DEFAULT 0.00,
+  `payment_status` enum('Pending','Paid') DEFAULT 'Pending',
+  `payment_method` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `booking`
 --
 
-INSERT INTO `booking` (`id`, `user_id`, `name`, `pickup`, `dropoff`, `datetime`, `created_at`, `driver_id`, `status`) VALUES
-(1, NULL, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 18:27:00', '2025-08-26 10:27:14', 1, 'On the way'),
-(2, 1, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 19:08:00', '2025-08-26 11:08:19', 1, 'Accepted'),
-(4, 1, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 19:14:00', '2025-08-26 11:14:45', NULL, 'Pending'),
-(5, 3, 'Adam', 'jasin', 'MITC', '2025-08-26 19:33:00', '2025-08-26 11:33:12', NULL, 'Pending'),
-(6, 3, 'Adam', 'Jelatang', 'MITC', '2025-08-27 19:34:00', '2025-08-26 11:34:10', 1, 'Pending'),
-(7, 1, 'Haris', 'Jelatang', 'Sungai petai', '2025-08-28 10:15:00', '2025-08-27 02:15:49', 1, 'Cancelled'),
-(8, 9, 'olap', 'UiTM Jasin', 'Sungai petai', '2025-08-28 19:08:00', '2025-08-27 11:08:47', 1, 'On the way'),
-(9, 2, 'Haris', 'UiTM Jasin', 'Shah Alam', '2025-09-04 19:11:00', '2025-08-27 11:11:18', 1, 'On the way');
+INSERT INTO `booking` (`id`, `user_id`, `name`, `pickup`, `dropoff`, `datetime`, `created_at`, `driver_id`, `status`, `total_amount`, `payment_status`, `payment_method`) VALUES
+(1, NULL, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 18:27:00', '2025-08-26 10:27:14', 1, 'Completed', 0.00, 'Pending', NULL),
+(2, 1, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 19:08:00', '2025-08-26 11:08:19', 1, 'Accepted', 0.00, 'Pending', NULL),
+(4, 1, 'Ridhwan', 'Jelatang', 'Sungai petai', '2025-08-26 19:14:00', '2025-08-26 11:14:45', 1, 'Completed', 0.00, 'Pending', NULL),
+(5, 3, 'Adam', 'jasin', 'MITC', '2025-08-26 19:33:00', '2025-08-26 11:33:12', NULL, 'Pending', 0.00, 'Pending', NULL),
+(6, 3, 'Adam', 'Jelatang', 'MITC', '2025-08-27 19:34:00', '2025-08-26 11:34:10', 1, 'Pending', 0.00, 'Pending', NULL),
+(7, 1, 'Haris', 'Jelatang', 'Sungai petai', '2025-08-28 10:15:00', '2025-08-27 02:15:49', 1, 'Cancelled', 20.00, 'Paid', 'Online'),
+(8, 9, 'olap', 'UiTM Jasin', 'Sungai petai', '2025-08-28 19:08:00', '2025-08-27 11:08:47', 1, 'Accepted', 0.00, 'Pending', NULL),
+(9, 2, 'Haris', 'UiTM Jasin', 'Shah Alam', '2025-09-04 19:11:00', '2025-08-27 11:11:18', 1, 'On the way', 0.00, 'Pending', NULL),
+(10, 1, 'Ridhwan', 'Jelatang', 'MITC', '2025-08-28 23:59:00', '2025-08-27 15:59:30', 1, 'Completed', 12.00, 'Paid', 'Cash');
 
 -- --------------------------------------------------------
 
@@ -71,7 +75,30 @@ CREATE TABLE `drivers` (
 --
 
 INSERT INTO `drivers` (`driver_id`, `name`, `email`, `password`) VALUES
-(1, 'wan', 'mridhwan950@gmail.com', '123');
+(1, 'wan', 'mridhwan950@gmail.com', '123'),
+(2, 'Someone', 'someone@gmail.com', 's');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`id`, `booking_id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
+(4, 10, 1, 3, 'nice', '2025-08-28 04:57:39');
 
 -- --------------------------------------------------------
 
@@ -120,6 +147,14 @@ ALTER TABLE `drivers`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -134,13 +169,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `drivers`
 --
 ALTER TABLE `drivers`
-  MODIFY `driver_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `driver_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -158,6 +199,13 @@ ALTER TABLE `users`
 ALTER TABLE `booking`
   ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`);
+
+--
+-- Constraints for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD CONSTRAINT `feedback_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `booking` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `feedback_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
