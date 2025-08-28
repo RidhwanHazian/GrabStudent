@@ -612,6 +612,7 @@ def edit_profile():
     return render_template('edit_profile.html', admin=admin)
 
 # ----------------- CUSTOMER DASHBOARD -----------------
+# ----------------- CUSTOMER DASHBOARD -----------------
 @app.route('/customer')
 @app.route('/customer/dashboard')
 def customer_dashboard():
@@ -619,24 +620,39 @@ def customer_dashboard():
         flash("⚠️ Customer access required.")
         return redirect(url_for('login'))
 
-    status_filter = request.args.get('status')  # get filter from query param
+    status_filter = request.args.get('status')  # ?status= filter
 
     cursor = db.cursor(dictionary=True)
 
     # Fetch bookings with optional status filter
     if status_filter:
-        cursor.execute(
-            "SELECT * FROM booking WHERE user_id=%s AND status=%s ORDER BY datetime ASC",
-            (session['user_id'], status_filter)
-        )
+        cursor.execute("""
+            SELECT b.*, 
+                   f.id AS feedback_id
+            FROM booking b
+            LEFT JOIN feedback f ON f.booking_id = b.id AND f.user_id = %s
+            WHERE b.user_id=%s AND b.status=%s
+            ORDER BY b.datetime DESC
+        """, (session['user_id'], session['user_id'], status_filter))
     else:
-        cursor.execute(
-            "SELECT * FROM booking WHERE user_id=%s ORDER BY datetime DESC",
-            (session['user_id'],)
-        )
-    bookings = cursor.fetchall()
+        cursor.execute("""
+            SELECT b.*, 
+                   f.id AS feedback_id
+            FROM booking b
+            LEFT JOIN feedback f ON f.booking_id = b.id AND f.user_id = %s
+            WHERE b.user_id=%s
+            ORDER BY b.datetime DESC
+        """, (session['user_id'], session['user_id']))
 
-    # Fetch previous feedback
+    bookings_raw = cursor.fetchall()
+
+    # Add a boolean flag for each booking to indicate feedback exists
+    bookings = []
+    for b in bookings_raw:
+        b['has_feedback'] = b['feedback_id'] is not None
+        bookings.append(b)
+
+    # Fetch previous feedbacks
     cursor.execute("""
         SELECT f.*, b.pickup, b.dropoff, b.datetime
         FROM feedback f
@@ -647,7 +663,13 @@ def customer_dashboard():
     feedbacks = cursor.fetchall()
 
     cursor.close()
-    return render_template('customer_dashboard.html', bookings=bookings, feedbacks=feedbacks, status_filter=status_filter)
+    return render_template(
+        'customer_dashboard.html',
+        bookings=bookings,
+        feedbacks=feedbacks,
+        status_filter=status_filter
+    )
+
 
 
 # Cancel booking

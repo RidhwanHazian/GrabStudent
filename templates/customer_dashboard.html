@@ -66,12 +66,9 @@
           <td class="status {{ booking.status|lower|replace(' ', '-') }}">{{ booking.status }}</td>
           <td class="actions">
             <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn detail">Details</a>
-            {% if booking.status == 'Completed' %}
-              {% if booking.has_feedback %}
-                <a href="{{ url_for('edit_feedback', feedback_id=booking.feedback_id) }}" class="btn edit">Edit Feedback</a>
-              {% else %}
-                <a href="{{ url_for('feedback_booking', booking_id=booking.id) }}" class="btn">Give Feedback</a>
-              {% endif %}
+
+            {% if booking.status == 'Completed' and not booking.has_feedback %}
+              <a href="{{ url_for('feedback_booking', booking_id=booking.id) }}" class="btn">Give Feedback</a>
             {% endif %}
           </td>
         </tr>
