@@ -80,6 +80,18 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 
 ## Setup Instructions
 
+## Database Setup
+
+This project includes a MySQL database schema file `grabstudent.sql`. Follow these steps to set it up:
+
+1. Make sure you have MySQL installed.
+2. Open your MySQL client (e.g., phpMyAdmin or MySQL Workbench).
+3. Create a new database:
+
+```sql
+CREATE DATABASE grabstudent;
+USE grabstudent;
+
 ### Prerequisites
 - Python 3.8+
 - MySQL Server
@@ -145,16 +157,23 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 
 ### Customer Access
 - Navigate to `/customer/dashboard` to view and manage bookings.
-- Submit feedback on completed rides.
+- Make new bookings using the "Make Booking" page.
+- View all submitted feedback and edit if needed.
+- Complete payments for bookings via the "Payments" page.
 
 ### Driver Access
 - Navigate to `/driver` to view available bookings.
-- Select a booking to take.
-- Update the booking status using the dropdown in "Assigned Bookings".
-- When a status is updated, an email is sent to the customer.
+- Select a booking to take responsibility for it.
+- View all accepted bookings in "My Bookings".
+- Use the status dropdown to update bookings (Pending, Accepted, On the way, Completed, Cancelled).
+- When a booking status is updated, an email notification is sent to the customer.
 
 ### Admin Access
 - Navigate to `/admin/dashboard` to manage all customer bookings and feedback.
+- Use "Manage Bookings" to filter by status, driver, or date range, and delete bookings if needed.
+- Manage all users and drivers via "Manage Users/Drivers".
+- View and delete customer feedback in the "Feedback" section.
+- Edit your own admin profile in "Edit Profile".
 
 ---
 
