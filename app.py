@@ -807,6 +807,53 @@ def delete_feedback(feedback_id):
     flash("🗑️ Feedback deleted successfully.")
     return redirect(url_for('customer_dashboard'))
 
+# ----------------- ADMIN: View All Feedback -----------------
+@app.route('/admin/feedback')
+def admin_feedbacks():
+    if 'user_id' not in session or session.get('user_type') != 'admin':
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT 
+            f.id AS feedback_id,
+            f.rating,
+            f.comment,
+            f.created_at,
+            cu.name AS customer_name,
+            d.name AS driver_name
+        FROM feedback f
+        JOIN booking b ON f.booking_id = b.id
+        JOIN users cu ON f.user_id = cu.id
+        LEFT JOIN drivers d ON d.driver_id = b.driver_id
+        ORDER BY f.created_at DESC
+    """)
+
+
+    feedbacks = cursor.fetchall()
+    cursor.close()
+
+    return render_template('admin_feedbacks.html', feedbacks=feedbacks)
+
+
+# ----------------- ADMIN DELETE FEEDBACK -----------------
+@app.route('/admin/delete_feedback/<int:feedback_id>', methods=['POST'])
+def admin_delete_feedback(feedback_id):
+    if 'user_id' not in session or session.get('user_type') != 'admin':
+        flash("⚠️ Admin access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM feedback WHERE id=%s", (feedback_id,))
+    db.commit()
+    cursor.close()
+
+    flash("🗑️ Feedback deleted successfully.")
+    return redirect(url_for('admin_feedbacks'))
+
+
+
 
 # ----------------- RUN SERVER -----------------
 

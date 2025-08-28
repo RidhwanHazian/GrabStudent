@@ -9,24 +9,25 @@
 <body>
 
     <!-- Header / Navbar -->
-    <header>
-        <div class="logo">GRAB STUDENT - Admin</div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ url_for('admin_bookings') }}" class="active">Manage Bookings</a></li>
-                <li><a href="{{ url_for('admin_users') }}">Manage Users/Drivers</a></li>
-                <li><a href="{{ url_for('edit_profile') }}">Edit Profile</a></li> <!-- New link -->
-                <li>
-                    <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
-                        <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
-                            Logout
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </nav>
-    </header>
+  <header>
+      <div class="logo">GRAB STUDENT - Admin</div>
+      <nav>
+          <ul class="nav-links">
+              <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+              <li><a href="{{ url_for('admin_bookings') }} " class="active">Manage Bookings</a></li>
+              <li><a href="{{ url_for('admin_users') }}">Manage Users/Drivers</a></li>
+              <li><a href="{{ url_for('admin_feedbacks') }}">Feedback</a></li> <!-- ✅ New Feedback link -->
+              <li><a href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+              <li>
+                  <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+                      <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                          Logout
+                      </button>
+                  </form>
+              </li>
+          </ul>
+      </nav>
+  </header>
 
     <main>
         <section class="recent-bookings">
