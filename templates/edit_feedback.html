@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Feedback | Grab Student</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Navbar -->
+  <header>
+    <div class="logo">GRAB STUDENT - Customer</div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
+        <li>
+            <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                  Logout
+                </button>
+            </form>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Edit Feedback Section -->
+  <section class="edit-feedback-section">
+    <h2>Edit Your Feedback</h2>
+
+    <!-- Edit Form -->
+    <form action="{{ url_for('edit_feedback', feedback_id=feedback.id) }}" method="POST" class="edit-feedback-form">
+      
+      <div class="feedback-rating-group">
+        <label for="feedback_rating_select">Rating:</label>
+        <select name="rating" id="feedback_rating_select" required>
+          <option value="1" {% if feedback.rating == 1 %}selected{% endif %}>1 ⭐</option>
+          <option value="2" {% if feedback.rating == 2 %}selected{% endif %}>2 ⭐</option>
+          <option value="3" {% if feedback.rating == 3 %}selected{% endif %}>3 ⭐</option>
+          <option value="4" {% if feedback.rating == 4 %}selected{% endif %}>4 ⭐</option>
+          <option value="5" {% if feedback.rating == 5 %}selected{% endif %}>5 ⭐</option>
+        </select>
+      </div>
+
+      <label for="edit_comment">Comment:</label>
+      <textarea name="comment" id="edit_comment" rows="4">{{ feedback.comment }}</textarea>
+
+      <div class="edit-feedback-actions">
+        <button type="submit" name="action" value="update" class="btn update-btn">Update</button>
+        <button type="submit" name="action" value="delete" class="delete-btn"
+          onclick="return confirm('⚠️ Are you sure you want to delete this feedback? This action cannot be undone.');">
+          Delete
+        </button>
+      </div>
+    </form>
+  </section>
+</body>
+</html>

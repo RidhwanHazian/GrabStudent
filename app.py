@@ -755,6 +755,57 @@ def booking_detail(booking_id):
 
     return render_template('booking_detail.html', booking=booking)
 
+# ----------------- EDIT FEEDBACK -----------------
+@app.route('/edit_feedback/<int:feedback_id>', methods=['GET', 'POST'])
+def edit_feedback(feedback_id):
+    cursor = db.cursor(dictionary=True)
+
+    # Get current feedback for display
+    cursor.execute("SELECT * FROM feedback WHERE id = %s", (feedback_id,))
+    feedback = cursor.fetchone()
+
+    if request.method == 'POST':
+        action = request.form.get("action")
+
+        if action == "update":
+            rating = request.form["rating"]
+            comment = request.form["comment"]
+
+            cursor.execute("""
+                UPDATE feedback
+                SET rating = %s, comment = %s
+                WHERE id = %s
+            """, (rating, comment, feedback_id))
+            db.commit()
+            flash("✅ Feedback updated successfully.")
+            return redirect(url_for("customer_dashboard"))
+
+        elif action == "delete":
+            cursor.execute("DELETE FROM feedback WHERE id = %s", (feedback_id,))
+            db.commit()
+            flash("🗑️ Feedback deleted successfully.")
+            return redirect(url_for("customer_dashboard"))
+
+    cursor.close()
+    return render_template("edit_feedback.html", feedback=feedback)
+
+
+
+# ----------------- DELETE FEEDBACK -----------------
+@app.route('/delete_feedback/<int:feedback_id>', methods=['POST'])
+def delete_feedback(feedback_id):
+    if 'user_id' not in session or session.get('user_type') != 'customer':
+        flash("⚠️ Customer access required.")
+        return redirect(url_for('login'))
+
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM feedback WHERE feedback_id=%s AND user_id=%s", 
+                   (feedback_id, session['user_id']))
+    db.commit()
+    cursor.close()
+
+    flash("🗑️ Feedback deleted successfully.")
+    return redirect(url_for('customer_dashboard'))
 
 
 # ----------------- RUN SERVER -----------------

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Dashboard | Grab Student</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -14,10 +15,22 @@
       <ul>
         <li><a href="{{ url_for('customer_dashboard') }}" class="active">Dashboard</a></li>
         <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li>
+            <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                  Logout
+                </button>
+            </form>
+        </li>
       </ul>
     </nav>
   </header>
+  <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p class="success-msg">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
 
   <!-- Content -->
   <section class="form-section">
@@ -32,6 +45,7 @@
       <a href="{{ url_for('customer_dashboard', status='Cancelled') }}" class="{% if status_filter=='Cancelled' %}active{% endif %}">Cancelled</a>
     </div>
 
+    {% if bookings %}
     <table>
       <thead>
         <tr>
@@ -51,41 +65,55 @@
           <td class="status {{ booking.status|lower|replace(' ', '-') }}">{{ booking.status }}</td>
           <td class="actions">
             <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn detail">Details</a>
-            <a href="{{ url_for('feedback_booking', booking_id=booking.id) }}" class="btn">Give Feedback</a>
+            {% if booking.status == 'Completed' %}
+              {% if booking.has_feedback %}
+                <a href="{{ url_for('edit_feedback', feedback_id=booking.feedback_id) }}" class="btn edit">Edit Feedback</a>
+              {% else %}
+                <a href="{{ url_for('feedback_booking', booking_id=booking.id) }}" class="btn">Give Feedback</a>
+              {% endif %}
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <p>No bookings found.</p>
+    {% endif %}
   </section>
+
   <!-- Previous Feedback Section -->
-    <section class="form-section">
-        <h2>Your Feedback</h2>
-        {% if feedbacks %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Booking</th>
-                    <th>Rating</th>
-                    <th>Comment</th>
-                    <th>Submitted At</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for fb in feedbacks %}
-                <tr>
-                    <td>{{ fb.pickup }} → {{ fb.dropoff }} | {{ fb.datetime }}</td>
-                    <td>{{ fb.rating }} ⭐</td>
-                    <td>{{ fb.comment }}</td>
-                    <td>{{ fb.created_at }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>No feedback submitted yet.</p>
-        {% endif %}
-    </section>
+  <section class="form-section" id="feedback">
+    <h2>Your Feedback</h2>
+    {% if feedbacks %}
+    <table>
+      <thead>
+        <tr>
+          <th>Booking</th>
+          <th>Rating</th>
+          <th>Comment</th>
+          <th>Submitted At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fb in feedbacks %}
+        <tr>
+          <td>{{ fb.pickup }} → {{ fb.dropoff }} | {{ fb.datetime }}</td>
+          <td>{{ fb.rating }} ⭐</td>
+          <td>{{ fb.comment }}</td>
+          <td>{{ fb.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>
+            <a href="{{ url_for('edit_feedback', feedback_id=fb.id) }}" class="btn edit">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p>No feedback submitted yet.</p>
+    {% endif %}
+  </section>
 
 </body>
 </html>

@@ -817,7 +817,141 @@ canvas#statusChart {
     background-color: #ececff;
 }
 
+.booking-info{
+  color: black;
+  text-align: left;
+}
 
+/* ========================= */
+/* Edit Feedback Page Styles */
+/* ========================= */
+.edit-feedback-section {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #fefefe;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.edit-feedback-section h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.edit-booking-info {
+  background: #f9f9f9;
+  padding: 15px;
+  border-left: 4px solid #4CAF50;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+
+#edit-feedback-form label {
+  display: block;
+  font-weight: 600;
+  margin: 12px 0 6px;
+}
+
+#edit-feedback-form select,
+#edit-feedback-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 15px;
+  margin-bottom: 15px;
+}
+
+#edit-feedback-form textarea {
+  resize: vertical;
+}
+
+.btn.edit-submit {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.btn.edit-submit:hover {
+  background: #1976D2;
+}
+/* Container for label + select */
+.feedback-rating-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Label styling */
+.feedback-rating-group label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Select box styling */
+#feedback_rating_select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #ccc;
+  font-size: 14px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  appearance: none; /* removes default browser dropdown style */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='gray'><polygon points='0,0 14,0 7,10'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+/* Hover + Focus effects */
+#feedback_rating_select:hover {
+  border-color: #6C63FF;
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.4);
+}
+
+#feedback_rating_select:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.5);
+}
+
+/* Option styling */
+#feedback_rating_select option {
+  padding: 8px;
+  font-size: 14px;
+}
+
+/* Comment Textarea */
+#edit_comment {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  min-height: 120px;
+  font-size: 15px;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#edit_comment:focus {
+  border-color: #5f41e4;
+  box-shadow: 0 0 6px rgba(95, 65, 228, 0.4);
+  outline: none;
+}
 
 /* Responsive: stack filters on small screens */
 @media (max-width: 768px) {

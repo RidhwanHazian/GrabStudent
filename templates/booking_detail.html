@@ -14,7 +14,13 @@
       <ul>
         <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
         <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li>
+            <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                  Logout
+                </button>
+            </form>
+        </li>
       </ul>
     </nav>
   </header>

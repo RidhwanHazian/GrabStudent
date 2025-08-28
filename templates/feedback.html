@@ -14,7 +14,13 @@
       <ul>
         <li><a href="{{ url_for('customer_dashboard') }}">Dashboard</a></li>
         <li><a href="{{ url_for('booking') }}">Make Booking</a></li>
-        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li>
+            <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
+                <button type="submit" class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+                  Logout
+                </button>
+            </form>
+        </li>
       </ul>
     </nav>
   </header>
@@ -23,21 +29,17 @@
   <section class="form-section" id="feedback-section">
     <h2>Submit Your Feedback</h2>
 
-    <form action="{{ url_for('feedback_booking', booking_id=selected_booking.id if selected_booking else 0) }}" method="POST" id="feedback-form">
-      <label for="feedback_booking_select">Select Booking:</label>
-      <select name="feedback_booking_id" id="feedback_booking_select" required>
-        <option value="">-- Choose Booking --</option>
-        {% for bkg in bookings %}
-          {% if bkg.status == 'Completed' %}
-          <option value="{{ bkg.id }}">
-            {{ bkg.pickup }} → {{ bkg.dropoff }} | {{ bkg.datetime }}
-          </option>
-          {% endif %}
-        {% endfor %}
-      </select>
+    <!-- Show booking info instead of asking to select -->
+    <div class="booking-info">
+      <p><strong>Pickup:</strong> {{ booking.pickup }}</p>
+      <p><strong>Dropoff:</strong> {{ booking.dropoff }}</p>
+      <p><strong>Date & Time:</strong> {{ booking.datetime }}</p>
+    </div>
+
+    <form action="{{ url_for('feedback_booking', booking_id=booking.id) }}" method="POST" id="feedback-form">
 
       <label for="feedback_rating_select">Rating:</label>
-      <select name="feedback_rating" id="feedback_rating_select" required>
+      <select name="rating" id="feedback_rating_select" required>
         <option value="">-- Select Rating --</option>
         <option value="1">1 ⭐</option>
         <option value="2">2 ⭐</option>
@@ -47,7 +49,7 @@
       </select>
 
       <label for="feedback_comment_area">Comment:</label>
-      <textarea name="feedback_comment" id="feedback_comment_area" rows="4" placeholder="Write your feedback here..."></textarea>
+      <textarea name="comment" id="feedback_comment_area" rows="4" placeholder="Write your feedback here..."></textarea>
 
       <button type="submit" class="btn submit" id="feedback_submit_btn">Submit Feedback</button>
     </form>
