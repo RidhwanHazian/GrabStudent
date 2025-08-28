@@ -612,7 +612,7 @@ def edit_profile():
     return render_template('edit_profile.html', admin=admin)
 
 # ----------------- CUSTOMER DASHBOARD -----------------
-# ----------------- CUSTOMER DASHBOARD -----------------
+
 @app.route('/customer')
 @app.route('/customer/dashboard')
 def customer_dashboard():
