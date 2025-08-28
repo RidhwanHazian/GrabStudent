@@ -78,7 +78,23 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 
 ---
 
+## Screenshots
+
+<p float="left">
+  <img src="assets/SignupPage.png" width="200" alt="Signup">
+  <img src="assets/LoginPage.png" width="200" alt="Login">
+  <img src="Assets/mainpage.png" width="200" alt="Main Page">
+</p>
+
+<p float="left">
+  <img src="assets/CustomerDashboard.png" width="200" alt="Customer Dashboard">
+  <img src="assets/DriverDashboard.png" width="200" alt="Driver Dashboard">
+  <img src="assets/AdminDashboard.png" width="200" alt="Admin Dashboard">
+</p>
+
 ## Setup Instructions
+
+---
 
 ## Database Setup
 
