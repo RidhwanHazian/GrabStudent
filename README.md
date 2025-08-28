@@ -1,9 +1,9 @@
 # GrabStudent
 
-GrabStudent is a web-based platform designed to streamline booking and feedback for students using Grab services. The application supports **Customers, Admins, and Drivers**.
+GrabStudent is a web-based platform designed to streamline booking and feedback for students using Grab services. This project was created to explore how **Python** can be used to build web applications and is my **first project using Python** for a website. The application supports **Customers, Admins, and Drivers**.
 
-- Customers can book rides, track statuses, and submit feedback.
-- Drivers can view available bookings, select them, update statuses, and notify customers.
+- Customers can book rides, track statuses, and submit feedback.  
+- Drivers can view available bookings, select them, update statuses, and notify customers.  
 - Admins can oversee all bookings and feedback.
 
 ---
