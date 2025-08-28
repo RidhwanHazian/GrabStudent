@@ -80,6 +80,18 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 
 ## Setup Instructions
 
+## Database Setup
+
+This project includes a MySQL database schema file `grabstudent.sql`. Follow these steps to set it up:
+
+1. Make sure you have MySQL installed.
+2. Open your MySQL client (e.g., phpMyAdmin or MySQL Workbench).
+3. Create a new database:
+
+```sql
+CREATE DATABASE grabstudent;
+USE grabstudent;
+
 ### Prerequisites
 - Python 3.8+
 - MySQL Server
@@ -145,23 +157,59 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 
 ### Customer Access
 - Navigate to `/customer/dashboard` to view and manage bookings.
-- Submit feedback on completed rides.
+- Make new bookings using the "Make Booking" page.
+- View all submitted feedback and edit if needed.
+- Complete payments for bookings via the "Payments" page.
 
 ### Driver Access
 - Navigate to `/driver` to view available bookings.
-- Select a booking to take.
-- Update the booking status using the dropdown in "Assigned Bookings".
-- When a status is updated, an email is sent to the customer.
+- Select a booking to take responsibility for it.
+- View all accepted bookings in "My Bookings".
+- Use the status dropdown to update bookings (Pending, Accepted, On the way, Completed, Cancelled).
+- When a booking status is updated, an email notification is sent to the customer.
 
 ### Admin Access
 - Navigate to `/admin/dashboard` to manage all customer bookings and feedback.
+- Use "Manage Bookings" to filter by status, driver, or date range, and delete bookings if needed.
+- Manage all users and drivers via "Manage Users/Drivers".
+- View and delete customer feedback in the "Feedback" section.
+- Edit your own admin profile in "Edit Profile".
 
 ---
 
 ## Contributing
+
+- **Adam Mirza** - [GitHub](https://github.com/AdamMirza-crypto)  
+  Interface Designer – created the storyboard UI interface, some designs done in Canva (no coding).  
+
+- **Haris Naszim** - [GitHub](https://github.com/Dat1n)  
+  QA – responsible for testing the application, reporting bugs, and ensuring quality.
+  
 Contributions are welcome! Please fork the repository, create a new branch, and submit a pull request with your proposed changes.
 
 ---
 
 ## License
-This project is licensed under the MIT License.
+
+MIT License
+
+Copyright (c) 2025 Muhammad Ridhwan bin Hazian
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
