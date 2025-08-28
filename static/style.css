@@ -424,6 +424,12 @@ tr:hover {
 .card.completed { background-color: #a3be8c; color: #fff; }
 .card.pending { background-color: #ebcb8b; color: #fff; }
 .card.cancelled { background-color: #bf616a; color: #fff; }
+.card.profit {
+  background: linear-gradient(135deg, #f093fb, #f5576c); /* gradient highlight */
+  color: #fff;
+  font-size: 1.15rem;
+}
+
 
 /* Recent Bookings Table */
 .recent-bookings {
@@ -970,43 +976,307 @@ canvas#statusChart {
 /* ========================= */
 
 /* Tablets */
+/* ========================= */
+/*       RESPONSIVE CSS      */
+/* ========================= */
+
+/* Medium screens: Tablets */
 @media (max-width: 900px) {
-  header {
-    padding: 20px 30px;
-    flex-direction: column;
-    gap: 15px;
-  }
+    /* Header / Navbar */
+    header {
+        padding: 20px 30px;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
 
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    padding: 40px 20px;
-  }
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
 
-  .hero-text {
-    max-width: 100%;
-  }
+    .nav-buttons {
+        justify-content: center;
+        width: 100%;
+        margin-top: 10px;
+    }
 
-  .hero img {
-    margin-top: 25px;
-    max-width: 350px;
-  }
+    .logo {
+        text-align: center;
+    }
+
+    /* Hero section */
+    .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero img {
+        margin-top: 25px;
+        max-width: 350px;
+        height: auto;
+    }
+
+    /* Overview Cards */
+    .overview-cards {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .overview-cards .card {
+        font-size: 1rem;
+        padding: 15px;
+    }
+
+    /* Recent Bookings Table */
+    .recent-bookings {
+        margin: 15px 20px;
+        padding: 15px;
+    }
+
+    .recent-bookings table th,
+    .recent-bookings table td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
+
+    /* Analytics Chart */
+    .analytics-chart {
+        width: 90%;
+        height: auto;
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .analytics-chart canvas {
+        height: auto !important;
+    }
+
+    /* Feedback Section */
+    #feedback-section {
+        padding: 25px 15px;
+    }
+
+    #feedback-section h2 {
+        font-size: 24px;
+    }
+
+    #feedback-section h3 {
+        font-size: 20px;
+    }
+
+    #feedback_table th,
+    #feedback_table td {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+
+    /* Forms */
+    .form-section {
+        padding: 40px 15px;
+    }
+
+    .form-section form input,
+    .form-section form select,
+    .form-section form button {
+        max-width: 100%;
+        font-size: 14px;
+        padding: 10px;
+    }
 }
 
-/* Phones */
-@media screen and (max-width: 600px) {
-  .hamburger {
-    display: flex;
-  }
+/* Small screens: Mobile */
+@media (max-width: 600px) {
+    /* Header / Navbar */
+    header {
+        padding: 10px 15px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        gap: 8px;
+    }
+
+    nav ul li a {
+        font-size: 15px;
+        padding: 6px 10px;
+    }
+
+    .nav-buttons {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .logo {
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* Hero section */
+    .hero {
+        padding: 30px 15px;
+    }
+
+    .hero img {
+        max-width: 280px;
+    }
+
+    /* Overview Cards */
+    .overview-cards {
+        flex-direction: column;
+        gap: 12px;
+        padding: 10px 15px;
+    }
+
+    .overview-cards .card {
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+
+    /* Recent Bookings Table */
+    .recent-bookings {
+        margin: 10px 15px;
+        padding: 10px;
+    }
+
+    .recent-bookings table th,
+    .recent-bookings table td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    /* Analytics Chart */
+    .analytics-chart {
+        width: 95%;
+        height: auto;
+        padding: 10px;
+        margin: 10px auto;
+    }
+
+    .analytics-chart canvas {
+        height: auto !important;
+    }
+
+    /* Forms */
+    .form-section {
+        padding: 30px 10px;
+    }
+
+    .form-section form input,
+    .form-section form select,
+    .form-section form button {
+        max-width: 100%;
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    /* Feedback Section */
+    #feedback-section {
+        padding: 20px 10px;
+    }
+
+    #feedback-section h2 {
+        font-size: 22px;
+    }
+
+    #feedback-section h3 {
+        font-size: 18px;
+    }
+
+    #feedback_table th,
+    #feedback_table td {
+        font-size: 12px;
+        padding: 6px 5px;
+    }
+
+    /* Edit Feedback / Booking Cards */
+    .edit-feedback-section,
+    .detail-card,
+    .feedback-card {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+
+    .edit-feedback-section h2,
+    .detail-card h2,
+    .feedback-card h2 {
+        font-size: 20px;
+    }
+}
+
+/* ========================= */
+/*   TABLE RESPONSIVE CSS    */
+/* ========================= */
+
+/* Make tables scrollable on smaller screens */
+@media (max-width: 900px) {
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch; /* smooth scroll on iOS */
+    }
+
+    th, td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
 }
 
 @media (max-width: 600px) {
-  .analytics-chart {
-    width: 90%;
-    height: auto;
-  }
-  .analytics-chart canvas {
-    height: auto !important;
-  }
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    th, td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+
+    /* Optional: stack small table headers vertically for super small screens */
+    table.responsive-stack thead {
+        display: none;
+    }
+
+    table.responsive-stack tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #ccc;
+        padding: 10px;
+    }
+
+    table.responsive-stack tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 10px;
+        font-size: 12px;
+        text-align: left;
+    }
+
+    table.responsive-stack tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #333;
+    }
 }
+
+
+
+
 

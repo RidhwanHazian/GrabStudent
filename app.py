@@ -369,6 +369,10 @@ def admin_dashboard():
     cursor.execute("SELECT COUNT(*) as cancelled FROM booking WHERE status='Cancelled'")
     cancelled_bookings = cursor.fetchone()['cancelled']
 
+    # Total profit (sum of total_amount from completed bookings)
+    cursor.execute("SELECT SUM(total_amount) as total_profit FROM booking WHERE status='Completed'")
+    total_profit = cursor.fetchone()['total_profit'] or 0
+
     # Recent bookings (last 5)
     cursor.execute("""
         SELECT b.id, b.name, b.pickup, b.dropoff, b.datetime, b.status, d.name as driver_name
@@ -387,6 +391,7 @@ def admin_dashboard():
         completed_bookings=completed_bookings,
         pending_bookings=pending_bookings,
         cancelled_bookings=cancelled_bookings,
+        total_profit=total_profit,
         recent_bookings=recent_bookings
     )
 
