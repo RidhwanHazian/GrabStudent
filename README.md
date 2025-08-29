@@ -98,7 +98,7 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 
 ## Database Setup
 
-This project includes a MySQL database schema file `grabstudent.sql`. Follow these steps to set it up:
+This project includes a MySQL database schema file `grabstudent(3).sql`. Follow these steps to set it up:
 
 1. Make sure you have MySQL installed.
 2. Open your MySQL client (e.g., phpMyAdmin or MySQL Workbench).
