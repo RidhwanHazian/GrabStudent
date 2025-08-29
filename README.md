@@ -113,6 +113,7 @@ USE grabstudent;
 - MySQL Server
 - Flask
 - Flask-MySQLdb
+```
 
 ### Installation Steps
 
