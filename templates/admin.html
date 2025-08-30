@@ -39,6 +39,15 @@
 
   <section class="recent-bookings">
     <h2>Recent Bookings</h2>
+    <div class="status-tabs">
+      <a href="{{ url_for('admin_dashboard') }}" class="{% if not status_filter %}active{% endif %}">All</a>
+      <a href="{{ url_for('admin_dashboard', status='Pending') }}" class="{% if status_filter=='Pending' %}active{% endif %}">Pending</a>
+      <a href="{{ url_for('admin_dashboard', status='Accepted') }}" class="{% if status_filter=='Accepted' %}active{% endif %}">Accepted</a>
+      <a href="{{ url_for('admin_dashboard', status='On the way') }}" class="{% if status_filter=='On the way' %}active{% endif %}">On the way</a>
+      <a href="{{ url_for('admin_dashboard', status='Completed') }}" class="{% if status_filter=='Completed' %}active{% endif %}">Completed</a>
+      <a href="{{ url_for('admin_dashboard', status='Cancelled') }}" class="{% if status_filter=='Cancelled' %}active{% endif %}">Cancelled</a>
+    </div>
+    {% if recent_bookings %}
     <table>
       <thead>
         <tr>
@@ -63,6 +72,9 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <p style="text-align:center; color:black" >No bookings found for this status.</p>
+    {% endif %}
   </section>
 
     <!-- Analytics Chart -->

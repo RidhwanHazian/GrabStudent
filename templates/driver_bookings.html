@@ -41,7 +41,8 @@
       <a href="{{ url_for('driver_bookings', status='On the way') }}" class="{% if status_filter=='On the way' %}active{% endif %}">On the way</a>
       <a href="{{ url_for('driver_bookings', status='Completed') }}" class="{% if status_filter=='Completed' %}active{% endif %}">Completed</a>
     </div>
-
+    
+    {% if selected %}
     <table>
       <thead>
         <tr>
@@ -77,6 +78,9 @@
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+      <p>No bookings found for this status.</p>
+    {% endif %}
   </section>
 </body>
 </html>

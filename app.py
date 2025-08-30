@@ -258,7 +258,6 @@ def take_booking(booking_id):
     flash("✅ You have taken this booking!")
     return redirect(url_for('driver_dashboard'))
 
-
 # ----------------- SELECTED BOOKING PAGE -----------------
 @app.route('/driver/bookings')
 def driver_bookings():
@@ -279,11 +278,15 @@ def driver_bookings():
             "SELECT * FROM booking WHERE driver_id=%s ORDER BY datetime ASC",
             (session['user_id'],)
         )
-    bookings = cursor.fetchall()
+
+    bookings = cursor.fetchall() or []  # ensure it's a list
     cursor.close()
 
-    return render_template('driver_bookings.html', selected=bookings, status_filter=status_filter)
-
+    return render_template(
+        'driver_bookings.html',
+        selected=bookings,
+        status_filter=status_filter
+    )
 
 
 # ----------------- UPDATE BOOKING STATUS -----------------
@@ -385,44 +388,45 @@ Thank you for using Grab Student.
     flash(f"✅ Booking status updated to {new_status}.")
     return redirect(url_for('driver_bookings'))
 
-# ----------------- ADMIN DASHBOARD -----------------
-
 @app.route('/admin')
 def admin_dashboard():
     if 'user_id' not in session or not session.get('is_admin'):
         flash("⚠️ Admin access required.")
         return redirect(url_for('login'))
 
+    status_filter = request.args.get('status')  # Get status from query parameter
+
     cursor = db.cursor(dictionary=True)
 
-    # Total bookings
+    # Overview counts
     cursor.execute("SELECT COUNT(*) as total FROM booking")
     total_bookings = cursor.fetchone()['total']
 
-    # Completed bookings
     cursor.execute("SELECT COUNT(*) as completed FROM booking WHERE status='Completed'")
     completed_bookings = cursor.fetchone()['completed']
 
-    # Pending bookings
     cursor.execute("SELECT COUNT(*) as pending FROM booking WHERE status='Pending'")
     pending_bookings = cursor.fetchone()['pending']
 
-    # Cancelled bookings
     cursor.execute("SELECT COUNT(*) as cancelled FROM booking WHERE status='Cancelled'")
     cancelled_bookings = cursor.fetchone()['cancelled']
 
-    # Total profit (sum of total_amount from completed bookings)
     cursor.execute("SELECT SUM(total_amount) as total_profit FROM booking WHERE status='Completed'")
     total_profit = cursor.fetchone()['total_profit'] or 0
 
-    # Recent bookings (last 5)
-    cursor.execute("""
+    # Recent bookings with optional status filter
+    query = """
         SELECT b.id, b.name, b.pickup, b.dropoff, b.datetime, b.status, d.name as driver_name
         FROM booking b
         LEFT JOIN drivers d ON b.driver_id = d.driver_id
-        ORDER BY b.datetime DESC
-        LIMIT 5
-    """)
+    """
+    params = []
+    if status_filter:
+        query += " WHERE b.status=%s"
+        params.append(status_filter)
+    query += " ORDER BY b.datetime DESC LIMIT 5"
+
+    cursor.execute(query, tuple(params))
     recent_bookings = cursor.fetchall()
 
     cursor.close()
@@ -434,8 +438,10 @@ def admin_dashboard():
         pending_bookings=pending_bookings,
         cancelled_bookings=cancelled_bookings,
         total_profit=total_profit,
-        recent_bookings=recent_bookings
+        recent_bookings=recent_bookings,
+        status_filter=status_filter  # pass to HTML for active tab
     )
+
 
 # ----------------- ADMIN: Manage Bookings -----------------
 @app.route('/admin/bookings')
