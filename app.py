@@ -450,7 +450,8 @@ def admin_bookings():
     date_to = request.args.get('date_to')
 
     query = """
-        SELECT b.id, b.name, b.pickup, b.dropoff, b.datetime, b.status, u.name AS customer_name, u.email, b.driver_id
+        SELECT b.id, b.pickup, b.dropoff, b.datetime, b.status, b.payment_status, b.total_amount,
+               u.name AS customer_name, u.email, b.driver_id
         FROM booking b
         LEFT JOIN users u ON b.user_id = u.id
         WHERE 1=1
@@ -500,11 +501,15 @@ def edit_booking(booking_id):
         dropoff = request.form['dropoff']
         datetime_input = request.form['datetime']
         status = request.form['status']
+        payment_status = request.form['payment_status']
+        payment_amount = request.form['total_amount'] or 0
 
         cursor.execute("""
-            UPDATE booking SET pickup=%s, dropoff=%s, datetime=%s, status=%s
+            UPDATE booking
+            SET pickup=%s, dropoff=%s, datetime=%s, status=%s,
+                payment_status=%s, total_amount=%s
             WHERE id=%s
-        """, (pickup, dropoff, datetime_input, status, booking_id))
+        """, (pickup, dropoff, datetime_input, status, payment_status, payment_amount, booking_id))
         db.commit()
         cursor.close()
         flash("✅ Booking updated successfully!")
@@ -512,6 +517,7 @@ def edit_booking(booking_id):
 
     cursor.close()
     return render_template('edit_booking.html', booking=booking)
+
 
 
 # Delete booking

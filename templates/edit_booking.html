@@ -50,6 +50,24 @@
                         {% endfor %}
                     </select>
 
+                    <label for="payment_status">Payment Status</label>
+                    <select name="payment_status" id="payment_status" required>
+                        {% for ps in ['Pending', 'Paid'] %}
+                            <option value="{{ ps }}" {% if booking.payment_status == ps %}selected{% endif %}>{{ ps }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <label for="total_amount">Total Amount (RM)</label>
+                    <input type="number" id="total_amount" name="total_amount" step="0.01" value="{{ booking.total_amount }}" required>
+
+                    <label for="payment_method">Payment Method</label>
+                    <select name="payment_method" id="payment_method">
+                        <option value="" {% if not booking.payment_method %}selected{% endif %}>-- Select Method --</option>
+                        <option value="Cash" {% if booking.payment_method == 'Cash' %}selected{% endif %}>Cash</option>
+                        <option value="Card" {% if booking.payment_method == 'Card' %}selected{% endif %}>Card</option>
+                        <option value="Online" {% if booking.payment_method == 'Online' %}selected{% endif %}>Online</option>
+                    </select>
+
                     <button type="submit" class="btn">Save Changes</button>
                     <a href="{{ url_for('admin_bookings') }}" class="btn" style="background-color:#bf616a;">Cancel</a>
                 </div>
