@@ -1,9 +1,9 @@
 # GrabStudent
 
-GrabStudent is a web-based platform designed to streamline booking and feedback for students using Grab services. The application supports **Customers, Admins, and Drivers**.
+GrabStudent is a web-based platform designed to streamline booking and feedback for students using Grab services. This project was created to explore how **Python** can be used to build web applications and is my **first project using Python** for a website. The application supports **Customers, Admins, and Drivers**.
 
-- Customers can book rides, track statuses, and submit feedback.
-- Drivers can view available bookings, select them, update statuses, and notify customers.
+- Customers can book rides, track statuses, and submit feedback.  
+- Drivers can view available bookings, select them, update statuses, and notify customers.  
 - Admins can oversee all bookings and feedback.
 
 ---
@@ -78,11 +78,27 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 
 ---
 
+## Screenshots
+
+<p float="left">
+  <img src="assets/SignupPage.png" width="200" alt="Signup">
+  <img src="assets/LoginPage.png" width="200" alt="Login">
+  <img src="assets/mainpage.png" width="200" alt="Main Page">
+</p>
+
+<p float="left">
+  <img src="assets/CustomerDashboard.png" width="200" alt="Customer Dashboard">
+  <img src="assets/DriverDashboard.png" width="200" alt="Driver Dashboard">
+  <img src="assets/AdminDashboard.png" width="200" alt="Admin Dashboard">
+</p>
+
+---
+
 ## Setup Instructions
 
 ## Database Setup
 
-This project includes a MySQL database schema file `grabstudent.sql`. Follow these steps to set it up:
+This project includes a MySQL database schema file `grabstudent(3).sql`. Follow these steps to set it up:
 
 1. Make sure you have MySQL installed.
 2. Open your MySQL client (e.g., phpMyAdmin or MySQL Workbench).
@@ -97,6 +113,7 @@ USE grabstudent;
 - MySQL Server
 - Flask
 - Flask-MySQLdb
+```
 
 ### Installation Steps
 
