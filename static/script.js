@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msg = document.querySelector(".success-msg");
   if (msg && msg.textContent.trim() !== "") {
     msg.style.display = "block";
-    setTimeout(() => { msg.style.display = "none"; }, 5000);
+    setTimeout(() => { msg.style.display = "none"; }, 3000);
   }
 
   // ----------------- Admin Chart -----------------

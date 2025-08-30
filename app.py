@@ -388,6 +388,8 @@ Thank you for using Grab Student.
     flash(f"✅ Booking status updated to {new_status}.")
     return redirect(url_for('driver_bookings'))
 
+#------------------ ADMIN DASHBOARD -----------------
+
 @app.route('/admin')
 def admin_dashboard():
     if 'user_id' not in session or not session.get('is_admin'):

@@ -28,7 +28,12 @@
       </nav>
   </header>
 
-
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <p class="success-msg">{{ messages[0] }}</p>
+    {% endif %}
+  {% endwith %}
   <section class="overview-cards">
     <div class="card total">Total Bookings: {{ total_bookings }}</div>
     <div class="card completed">Completed: {{ completed_bookings }}</div>
