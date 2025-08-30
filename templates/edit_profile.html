@@ -40,7 +40,10 @@
             <label>Password:
                 <input type="password" name="password" placeholder="Leave blank to keep current password">
             </label>
-            <button type="submit" class="btn">Save Changes</button>
+            <button type="submit" class="btn" onclick="return confirm('Are you sure you want to save these changes?');">
+                Save Changes
+            </button>
+
         </form>
     </section>
 </main>
