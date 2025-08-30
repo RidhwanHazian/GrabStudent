@@ -301,47 +301,89 @@ def update_booking_status(booking_id):
         return redirect(url_for('driver_bookings'))
 
     cursor = db.cursor(dictionary=True)
-    # Update booking status
-    cursor.execute(
-        "UPDATE booking SET status = %s WHERE id = %s AND driver_id = %s",
-        (new_status, booking_id, session['user_id'])
-    )
-    db.commit()
 
-    # Get customer info
-    cursor.execute(
-        "SELECT name, email FROM users WHERE id = (SELECT user_id FROM booking WHERE id=%s)",
-        (booking_id,)
-    )
-    customer = cursor.fetchone()
+    # Fetch booking + customer + driver name (LEFT JOIN in case driver unassigned)
+    cursor.execute("""
+        SELECT u.name AS customer_name, u.email AS customer_email,
+               b.pickup, b.dropoff, b.datetime,
+               d.name AS driver_name, b.driver_id
+        FROM booking b
+        JOIN users u ON u.id = b.user_id
+        LEFT JOIN drivers d ON d.driver_id = b.driver_id
+        WHERE b.id = %s
+    """, (booking_id,))
+    details = cursor.fetchone()
+
+    if not details:
+        cursor.close()
+        flash("❌ Booking not found.")
+        return redirect(url_for('driver_bookings'))
+
+    driver_display = details['driver_name'] if details['driver_name'] else "Currently unassigned"
+
+    # Perform the update
+    if new_status == 'Cancelled':
+        cursor.execute(
+            "UPDATE booking SET status = 'Pending', driver_id = NULL WHERE id = %s AND driver_id = %s",
+            (booking_id, session['user_id'])
+        )
+    else:
+        cursor.execute(
+            "UPDATE booking SET status = %s WHERE id = %s AND driver_id = %s",
+            (new_status, booking_id, session['user_id'])
+        )
+    db.commit()
     cursor.close()
 
     # Send email notification
-    if customer:
-        try:
-            msg = Message(
-                subject=f"Your Booking Status Updated: {new_status}",
-                recipients=[customer['email']],
-                body=f"Hi {customer['name']},\n\nYour booking status has been updated to: {new_status}.\n\nThank you for using Grab Student."
-            )
+    try:
+        msg = Message(
+            subject=f"Your Booking Status Updated: {new_status}",
+            recipients=[details['customer_email']],
+            body=f"""
+Hi {details['customer_name']},
 
-            msg.html = f"""
-            <p>Hi {customer['name']},</p>
-            <p>Your booking status has been updated to: 
-            <b style="color: {'green' if new_status=='Completed' else 'red' if new_status=='Cancelled' else 'blue'};">
-            {new_status}</b>
-            </p>
-            <p>Thank you for using Grab Student.</p>
-            """
+Your booking status has been updated to: {new_status}.
 
-            Thread(target=send_async_email, args=(app, msg)).start()
-        except Exception as e:
-            print("Error sending email:", e)
+📍 Pickup: {details['pickup']}
+🏁 Dropoff: {details['dropoff']}
+🕒 Time: {details['datetime']}
+👨‍✈️ Driver: {driver_display}
+
+Thank you for using Grab Student.
+"""
+        )
+
+        msg.html = f"""
+        <p>Hi {details['customer_name']},</p>
+        <p>Your booking status has been updated to: 
+        <b style="color: {'green' if new_status=='Completed' else 'red' if new_status=='Cancelled' else 'blue'};">
+        {new_status}</b></p>
+        <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse;">
+            <tr style="background-color:{'green' if new_status=='Completed' else 'red' if new_status=='Cancelled' else '#f2f2f2'};">
+                <th>Pickup</th>
+                <th>Dropoff</th>
+                <th>Time</th>
+                <th>Driver</th>
+            </tr>
+
+            <tr>
+                <td>{details['pickup']}</td>
+                <td>{details['dropoff']}</td>
+                <td>{details['datetime']}</td>
+                <td>{driver_display}</td>
+            </tr>
+        </table>
+
+        <p>Thank you for using Grab Student.</p>
+        """
+
+        Thread(target=send_async_email, args=(app, msg)).start()
+    except Exception as e:
+        print("Error sending email:", e)
 
     flash(f"✅ Booking status updated to {new_status}.")
-    return redirect(url_for('driver_bookings'))  # ✅ Add this return
-
-
+    return redirect(url_for('driver_bookings'))
 
 # ----------------- ADMIN DASHBOARD -----------------
 

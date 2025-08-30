@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Driver Dashboard | Grab Student</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -26,6 +27,12 @@
 
   <!-- Content -->
   <section class="form-section">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p class="success-msg">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
     <h2>My Selected Bookings</h2>
     <div class="status-tabs">
       <a href="{{ url_for('driver_bookings') }}" class="{% if not status_filter %}active{% endif %}">All</a>
@@ -33,7 +40,6 @@
       <a href="{{ url_for('driver_bookings', status='Accepted') }}" class="{% if status_filter=='Accepted' %}active{% endif %}">Accepted</a>
       <a href="{{ url_for('driver_bookings', status='On the way') }}" class="{% if status_filter=='On the way' %}active{% endif %}">On the way</a>
       <a href="{{ url_for('driver_bookings', status='Completed') }}" class="{% if status_filter=='Completed' %}active{% endif %}">Completed</a>
-      <a href="{{ url_for('driver_bookings', status='Cancelled') }}" class="{% if status_filter=='Cancelled' %}active{% endif %}">Cancelled</a>
     </div>
 
     <table>
