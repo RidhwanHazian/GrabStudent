@@ -541,6 +541,7 @@ canvas#statusChart {
     gap: 10px;
     margin-bottom: 20px;
     align-items: flex-end; /* align inputs and button to bottom */
+    justify-content: center;
 }
 
 .filter-form label {
@@ -583,6 +584,7 @@ canvas#statusChart {
 
 .status-tabs {
   margin-bottom: 15px;
+  justify-content: center;
 }
 .status-tabs a {
   text-decoration: none;

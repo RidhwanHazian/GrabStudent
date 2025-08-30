@@ -35,8 +35,31 @@
   {% endwith %}
 
   <!-- Payments Section -->
+
   <section class="form-section">
     <h2>My Payments</h2>
+
+    <!-- 🔎 Search + Filter Form -->
+    <!-- 🔎 Search Box -->
+    <form method="GET" action="{{ url_for('payments') }}" class="filter-form">
+      <input type="text" name="search" placeholder="Search by pickup/dropoff..." value="{{ request.args.get('search', '') }}">
+      <button type="submit" style="width: auto; min-width: 70px;">Search</button>
+    </form>
+
+    <!-- 📌 Status Tabs -->
+    <div class="status-tabs">
+      <a href="{{ url_for('payments') }}" 
+        class="{% if not payment_filter %}active{% endif %}">All</a>
+
+      <a href="{{ url_for('payments', status='Paid') }}" 
+        class="{% if payment_filter=='Paid' %}active{% endif %}">Paid</a>
+
+      <a href="{{ url_for('payments', status='Unpaid') }}" 
+        class="{% if payment_filter=='Unpaid' %}active{% endif %}">Unpaid</a>
+    </div>
+
+
+
 
     {% if bookings %}
     <table>
@@ -83,5 +106,6 @@
       <p>No bookings found.</p>
     {% endif %}
   </section>
+
 </body>
 </html>

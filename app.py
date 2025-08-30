@@ -880,18 +880,45 @@ def admin_delete_feedback(feedback_id):
     return redirect(url_for('admin_feedbacks'))
 
 # ----------------- CUSTOMER PAYMENTS -----------------
-@app.route('/customer/payments')
+@app.route('/customer/payments', methods=['GET'])
 def payments():
     if 'user_id' not in session or session.get('user_type') != 'customer':
         flash("⚠️ Customer access required.")
         return redirect(url_for('login'))
 
+    user_id = session['user_id']
+    status = request.args.get('status')   # "Paid" or "Unpaid" from the tabs
+    search = request.args.get('search')
+
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM booking WHERE user_id=%s ORDER BY datetime DESC", (session['user_id'],))
+
+    query = "SELECT * FROM booking WHERE user_id = %s"
+    params = [user_id]
+
+    # ✅ Map "Unpaid" → "Pending"
+    if status == "Paid":
+        query += " AND payment_status = 'Paid'"
+    elif status == "Unpaid":
+        query += " AND payment_status = 'Pending'"
+
+    if search:
+        query += " AND (pickup LIKE %s OR dropoff LIKE %s)"
+        search_like = f"%{search}%"
+        params.extend([search_like, search_like])
+
+    query += " ORDER BY datetime DESC"
+    cursor.execute(query, params)
     bookings = cursor.fetchall()
     cursor.close()
 
-    return render_template('payments.html', bookings=bookings)
+    return render_template(
+        'payments.html',
+        bookings=bookings,
+        payment_filter=status,   # 👈 match your HTML variable name
+        search=search
+    )
+
+
 
 # ----------------- CUSTOMER: Pay Booking -----------------
 @app.route('/customer/pay_booking/<int:booking_id>', methods=['POST'])
@@ -913,7 +940,7 @@ def pay_booking(booking_id):
     cursor.close()
 
     flash(f"✅ Payment of RM{amount} via {payment_method} recorded successfully!")
-    return redirect(url_for('payments'))
+    return redirect(url_for('payments'))  # redirect back to payments page
 
 
 # ----------------- RUN SERVER -----------------
