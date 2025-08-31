@@ -56,6 +56,7 @@ GrabStudent is a web-based platform designed to streamline booking and feedback 
 - **Available Bookings:**  
   - Upon login, drivers see all customer bookings that have not yet been assigned to another driver.  
   - Drivers can select a booking to take responsibility for it.
+  - When a booking is selected by a driver then an email is sent to the customer to notify them.
 
 - **My Bookings:**  
   - Drivers can view all bookings they have accepted.  
@@ -182,6 +183,7 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 - Navigate to `/driver` to view available bookings.
 - Select a booking to take responsibility for it.
 - View all accepted bookings in "My Bookings".
+- When a booking is selected by a driver, an email notification is sent to the customer.
 - Use the status dropdown to update bookings (Pending, Accepted, On the way, Completed, Cancelled).
 - When a booking status is updated, an email notification is sent to the customer.
 
