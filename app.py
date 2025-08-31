@@ -688,7 +688,7 @@ def edit_profile():
         db.commit()
         cursor.close()
         flash("✅ Profile updated successfully!")
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('edit_profile'))
 
     cursor.close()
     return render_template('edit_profile.html', admin=admin)

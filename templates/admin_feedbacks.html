@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Feedback | Admin</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='script.js') }}" defer></script>
 </head>
 <body>
   <!-- Navbar -->
@@ -27,6 +28,12 @@
       </ul>
     </nav>
   </header>
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <p class="success-msg">{{ messages[0] }}</p>
+    {% endif %}
+  {% endwith %}
 
   <!-- Feedback Table -->
   <section class="recent-bookings">
