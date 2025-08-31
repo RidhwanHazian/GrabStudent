@@ -584,7 +584,7 @@ def admin_users():
 
 
 
-# Admin: Edit user/driver
+# Admin: Edit user/driver 
 @app.route('/admin/users/edit/<int:user_id>/<user_type>', methods=['GET','POST'])
 def edit_user(user_id, user_type):
     if 'user_id' not in session or not session.get('is_admin'):
@@ -600,14 +600,39 @@ def edit_user(user_id, user_type):
         cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
     record = cursor.fetchone()
 
+    if not record:
+        cursor.close()
+        flash("❌ Record not found!")
+        return redirect(url_for('admin_users'))
+
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
+        password = request.form.get('password')  # optional
 
-        if user_type == 'driver':
-            cursor.execute("UPDATE drivers SET name=%s, email=%s WHERE driver_id=%s", (name, email, user_id))
-        else:
-            cursor.execute("UPDATE users SET name=%s, email=%s WHERE id=%s", (name, email, user_id))
+        # Update query
+        if password:  # only update password if provided
+            if user_type == 'driver':
+                cursor.execute(
+                    "UPDATE drivers SET name=%s, email=%s, password=%s WHERE driver_id=%s",
+                    (name, email, password, user_id)
+                )
+            else:
+                cursor.execute(
+                    "UPDATE users SET name=%s, email=%s, password=%s WHERE id=%s",
+                    (name, email, password, user_id)
+                )
+        else:  # update without password
+            if user_type == 'driver':
+                cursor.execute(
+                    "UPDATE drivers SET name=%s, email=%s WHERE driver_id=%s",
+                    (name, email, user_id)
+                )
+            else:
+                cursor.execute(
+                    "UPDATE users SET name=%s, email=%s WHERE id=%s",
+                    (name, email, user_id)
+                )
 
         db.commit()
         cursor.close()
@@ -616,6 +641,7 @@ def edit_user(user_id, user_type):
 
     cursor.close()
     return render_template('edit_user.html', record=record, user_type=user_type)
+
 
 
 # Admin: Delete user/driver
