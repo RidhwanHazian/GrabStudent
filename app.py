@@ -828,7 +828,12 @@ def booking_detail(booking_id):
         return redirect(url_for('login'))
 
     cursor = db.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM booking WHERE id=%s AND user_id=%s", (booking_id, session['user_id']))
+    cursor.execute("""
+        SELECT b.*, d.name AS driver_name
+        FROM booking b
+        LEFT JOIN drivers d ON b.driver_id = d.driver_id
+        WHERE b.id = %s AND b.user_id = %s
+    """, (booking_id, session['user_id']))
     booking = cursor.fetchone()
     cursor.close()
 
@@ -837,6 +842,7 @@ def booking_detail(booking_id):
         return redirect(url_for('customer_dashboard'))
 
     return render_template('booking_detail.html', booking=booking)
+
 
 # ----------------- EDIT FEEDBACK -----------------
 @app.route('/edit_feedback/<int:feedback_id>', methods=['GET', 'POST'])
