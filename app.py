@@ -247,16 +247,99 @@ def take_booking(booking_id):
         flash("⚠️ Driver access required.")
         return redirect(url_for('login'))
 
-    cursor = db.cursor()
+    cursor = db.cursor(dictionary=True)
+
+    # Assign booking to driver
     cursor.execute(
-        "UPDATE booking SET driver_id = %s, status = %s WHERE id = %s", 
-        (session['user_id'], 'Pending', booking_id)   # ✅ Capital P
+        "UPDATE booking SET driver_id = %s, status = %s WHERE id = %s",
+        (session['user_id'], 'Pending', booking_id)
     )
     db.commit()
+
+    # ✅ Fetch booking + customer info
+    cursor.execute("""
+        SELECT u.email, u.name AS customer_name,
+               b.pickup, b.dropoff, b.datetime
+        FROM booking b
+        JOIN users u ON b.user_id = u.id   -- users table, not customer
+        WHERE b.id = %s
+    """, (booking_id,))
+    booking = cursor.fetchone()
+
+    # ✅ Fetch driver info (drivers table)
+    cursor.execute("SELECT name FROM drivers WHERE driver_id = %s", (session['user_id'],))
+    driver = cursor.fetchone()
+
     cursor.close()
 
-    flash("✅ You have taken this booking!")
+    # ✅ Send styled HTML email
+    if booking and driver:
+        subject = "🚖 Your Booking Has Been Accepted!"
+        body = f"""
+        <html>
+        <head>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    background-color: #f9f9f9;
+                    padding: 20px;
+                }}
+                .container {{
+                    background: #ffffff;
+                    border-radius: 8px;
+                    padding: 20px;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                    max-width: 600px;
+                    margin: auto;
+                }}
+                h2 {{
+                    color: #4CAF50;
+                }}
+                .info {{
+                    margin: 10px 0;
+                    padding: 10px;
+                    border-left: 4px solid #4CAF50;
+                    background: #f1fdf1;
+                }}
+                .footer {{
+                    margin-top: 20px;
+                    font-size: 12px;
+                    color: #666;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>🚖 Booking Confirmation</h2>
+                <p>Hi <b>{booking['customer_name']}</b>,</p>
+                <p>Your booking has been <b style="color:blue;">taken</b> by a driver. Here are the details:</p>
+                <div class="info">
+                    👤 <b>Driver:</b> {driver['name']}<br>
+                    📍 <b>Pickup:</b> {booking['pickup']}<br>
+                    🛑 <b>Dropoff:</b> {booking['dropoff']}<br>
+                    📅 <b>Date & Time:</b> {booking['datetime']}
+                </div>
+                <p>Please be ready at your pickup location. 🚗💨</p>
+                <p class="footer">– GrabStudent Team</p>
+            </div>
+        </body>
+        </html>
+        """
+
+        # ✅ Run in background thread (non-blocking, same as update_status)
+        try:
+            msg = Message(subject=subject, recipients=[booking['email']])
+            msg.html = body
+            Thread(target=send_async_email, args=(app, msg)).start()
+        except Exception as e:
+            print("Error sending email:", e)
+
+    if booking:
+        flash(f"✅ You have taken {booking['customer_name']}'s booking!")
+    else:
+        flash("✅ You have taken this booking!")
     return redirect(url_for('driver_dashboard'))
+
 
 # ----------------- SELECTED BOOKING PAGE -----------------
 @app.route('/driver/bookings')
@@ -385,7 +468,7 @@ Thank you for using Grab Student.
     except Exception as e:
         print("Error sending email:", e)
 
-    flash(f"✅ Booking status updated to {new_status}.")
+    flash(f"✅ Booking status {details['customer_name']} updated to {new_status}.")
     return redirect(url_for('driver_bookings'))
 
 #------------------ ADMIN DASHBOARD -----------------
