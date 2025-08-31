@@ -190,7 +190,7 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 - Use "Manage Bookings" to filter by status, driver, or date range, and delete bookings if needed.
 - Manage all users and drivers via "Manage Users/Drivers".
 - View and delete customer feedback in the "Feedback" section.
-- Edit your own admin profile in "Edit Profile".
+- Edit your own admin profile in "Edit Profile", including changing your password.
 
 ---
 
