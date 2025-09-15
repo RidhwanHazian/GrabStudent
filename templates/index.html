@@ -53,7 +53,7 @@
       <a href="{{ url_for('booking') }}" class="btn">BOOK NOW!</a>
     {% elif not session.get('user_id') %}
       <!-- Suggest login if not logged in -->
-      <a href="{{ url_for('login') }}" class="btn">Login to Book</a>
+      <a href="{{ url_for('booking') }}" class="btn">BOOK NOW!</a>
     {% endif %}
     
   </div>
