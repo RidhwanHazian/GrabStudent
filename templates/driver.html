@@ -13,6 +13,7 @@
     <div class="logo">GRAB STUDENT - Driver</div>
     <nav>
       <ul>
+        <li><a href="{{ url_for('index') }}">Homepage</a></li>
         <li><a href="{{ url_for('driver_bookings') }}">My Bookings</a></li>
         <li>
             <form method="POST" action="{{ url_for('logout') }}" style="display:inline;">
