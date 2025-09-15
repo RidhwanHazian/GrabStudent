@@ -198,14 +198,15 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 
 ## Contributing
 
-- **Ridhwan** – [GitHub](https://github.com/RidhwanHazian)
-  Programmer – (Python, HTML, CSS, JavaScript), responsible for full implementation and integration.
+- **[Ridhwan](https://github.com/RidhwanHazian)** – *Programmer*  
+  (Python, HTML, CSS, JavaScript)  
+  Responsible for full implementation and integration.  
 
-- **Adam Mirza** - [GitHub](https://github.com/AdamMirza-crypto)  
-  Interface Designer – created the storyboard UI interface, some designs done in Canva (no coding).  
+- **[Adam Mirza](https://github.com/AdamMirza-crypto)** – *Interface Designer*  
+  Created the storyboard UI interface and designs in Canva (no coding).  
 
-- **Haris Naszim** - [GitHub](https://github.com/Dat1n)  
-  QA – responsible for testing the application, reporting bugs, and ensuring quality.
+- **[Haris Naszim](https://github.com/Dat1n)** – *Quality Assurance (QA)*  
+  Responsible for testing the application, reporting bugs, and ensuring quality.  
   
 Contributions are welcome! Please fork the repository, create a new branch, and submit a pull request with your proposed changes.
 
