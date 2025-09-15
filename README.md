@@ -199,7 +199,7 @@ The application will be accessible at: [http://localhost:5000](http://localhost:
 ## Contributing
 
 - **Ridhwan** – [GitHub](https://github.com/RidhwanHazian)
-  Programmer (Python, HTML, CSS, JavaScript), responsible for full implementation and integration.
+  Programmer – (Python, HTML, CSS, JavaScript), responsible for full implementation and integration.
 
 - **Adam Mirza** - [GitHub](https://github.com/AdamMirza-crypto)  
   Interface Designer – created the storyboard UI interface, some designs done in Canva (no coding).  
